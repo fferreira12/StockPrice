@@ -24,7 +24,7 @@ namespace StockPrice
         provided by BM&FBovespa and turn it into a set of logic objects, 
         specially Stocks and MarketData
 
-        It was designed to work with in cash market
+        It was designed to work with in-cash market
     */
 
     public class Reader
@@ -223,6 +223,10 @@ namespace StockPrice
 
         public static DateTime ConvertStringToDateTime(string yyyymmdd)
         {
+            if(yyyymmdd.Length != 8)
+            {
+                throw new Exception("A string de data deve conter exatamente 8 caracteres.");
+            }
             DateTime d = new DateTime(int.Parse(yyyymmdd.Substring(0, 4)), int.Parse(yyyymmdd.Substring(4, 2)), int.Parse(yyyymmdd.Substring(6, 2)));
             return d;
         }

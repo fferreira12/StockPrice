@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StockPrice;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReaderTesting
 {
@@ -93,7 +94,7 @@ namespace ReaderTesting
             Stock petr = new Stock();
             petr.marketHistory = mData;
 
-            decimal AccDist = Analyzer.AccumulationDistribution(petr);
+            decimal AccDist = Analyzer.AccumulationDistribution(petr, startValue:-295529140.2642m);
         }
 
         [TestMethod]
@@ -102,13 +103,133 @@ namespace ReaderTesting
             List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
 
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
+            Dictionary<string, decimal> allRSI = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> allOverbought = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> allOversold = new Dictionary<string, decimal>();
 
             foreach(KeyValuePair<string, Stock> kvp in allStocks)
             {
                 decimal RSI = Analyzer.RelativeStrenghtIndex(kvp.Value, 14);
+                allRSI.Add(kvp.Key, RSI);
+                if(RSI >= 70)
+                {
+                    allOverbought.Add(kvp.Key, RSI);
+                }
+                else if (RSI <= 30)
+                {
+                    allOversold.Add(kvp.Key, RSI);
+                }
                 Assert.IsTrue(RSI >= 0m);
                 Assert.IsTrue(RSI <= 100m);
             }
+
+            var orderedOverbought =
+                from entry in allOverbought
+                orderby entry.Value descending
+                select entry;
+
+            var orderedOversold =
+                from entry in allOversold
+                orderby entry.Value descending
+                select entry;
+
+        }
+
+        [TestMethod]
+        public void TestAroonOsc()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            decimal aOsc = Analyzer.AroonOscillator(stk, 14);
+
+        }
+
+        [TestMethod]
+        public void TestMACD()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            decimal MACD = Analyzer.MACD(stk, 12, 26, 9, "20160819");
+        }
+
+        [TestMethod]
+        public void TestROC()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            decimal ROC = Analyzer.RateOfChange(stk, 9);
+        }
+
+        [TestMethod]
+        public void TestAnalyzeStock()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.AnalyzeStock(stk);
+        }
+
+        [TestMethod]
+        public void TestFillSimpleMovingAvg()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.FillSimpleMovingAvg(ref stk);
+        }
+
+        [TestMethod]
+        public void TestFillExponentialMovingAvg()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.FillExponentialMovingAvg(ref stk, 9);
+
+            Assert.AreEqual(15.1065m, Math.Round(stk.indicators.EMAShort["20160926"],4));
+        }
+
+        [TestMethod]
+        public void TestFillAccumulationDistribution()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.FillAccumulationDistribution(ref stk, -293444196.4039m);
+        }
+
+        [TestMethod]
+        public void TestFillRSI()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.FillRelativeStrenghtIndex(stk, 14);
+
+            Assert.AreEqual(47.0335m, Math.Round(stk.indicators.RSI["20160926"], 4));
+        }
+
+        [TestMethod]
+        public void TestFillAroonOscillator()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock stk = allStocks["PETR3"];
+
+            Analyzer.FillAroonOscillator(stk, 14);
+
+            Assert.AreEqual(14.2857m - 100m, Math.Round(stk.indicators.AroonOsc["20160926"], 4));
         }
     }
 }

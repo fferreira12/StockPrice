@@ -95,7 +95,21 @@ namespace ReaderTesting
         {
             List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
+
+            Stock stk = allStocks["PETR3"];
+
+            Assert.AreEqual(16.05m, stk.marketHistory["20160908"].openPrice);
+            Assert.AreEqual(16.45m, stk.marketHistory["20160908"].maxPrice);
+            Assert.AreEqual(15.96m, stk.marketHistory["20160908"].minPrice);
+            Assert.AreEqual(16.39m, stk.marketHistory["20160908"].closePrice);
+
+            Assert.AreEqual(10.15m, stk.marketHistory["20160601"].openPrice);
+            Assert.AreEqual(10.52m, stk.marketHistory["20160601"].maxPrice);
+            Assert.AreEqual(9.95m, stk.marketHistory["20160601"].minPrice);
+            Assert.AreEqual(10.41m, stk.marketHistory["20160601"].closePrice);
         }
+
+        
 
         
 
