@@ -9,12 +9,26 @@ namespace StockPrice
     public class Stock
     {
         public string stockCode;
-        public Dictionary<string, MarketData> marketHistory;
         public AnalyticInfo indicators;
+        public MarketHistory MarketHistory;
+        public Dictionary<string, MarketData> _marketData;
+
+        public Dictionary<string, MarketData> MarketDatas
+        {
+            get
+            {
+                return _marketData;
+            }
+            set
+            {
+                _marketData = value;
+                MarketHistory = new MarketHistory(_marketData);
+            }
+        }
 
         public Stock()
         {
-            marketHistory = new Dictionary<string, MarketData>();
+            MarketDatas = new Dictionary<string, MarketData>();
             indicators = new AnalyticInfo();
         }
 

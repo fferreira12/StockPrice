@@ -15,8 +15,22 @@ namespace StockPrice
 
     public class MarketData
     {
+
+
         public Stock stock;
-        public DateTime date; //make it into a property: when you set it, refresh dateStr
+        private DateTime _date;
+        public DateTime Date
+        {
+            get
+            {
+                return _date;
+            }
+            set
+            {
+                _date = value;
+                dateStr = _date.ToString("yyyyMMdd");
+            }
+        }
         public string dateStr;
         public decimal marketType;
         public decimal minPrice, maxPrice;

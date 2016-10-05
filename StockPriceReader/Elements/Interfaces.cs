@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace StockPrice
 {
     
-    public interface IMarketDataRetriever
+    //creates integer and string indexer for market data elements
+    public interface IMarketDataIndexer
     {
 
         //indexer for getting mData by integer
@@ -23,13 +24,19 @@ namespace StockPrice
             get;
             set;
         }
+        
+    }
+
+    //provides a way to get last n elements of market data or closing values
+    public interface IGetLaster
+    {
 
         //get the last n market data in an ordered fashion
         IEnumerable<MarketData> GetLastNMarKetDatas(int n, string refDate);
 
         //closing prices is used a lot, so having a direct way to get it will be fine
         IEnumerable<decimal> GetLastNClosingPrices(int n, string refDate);
-        
+
     }
 
 }

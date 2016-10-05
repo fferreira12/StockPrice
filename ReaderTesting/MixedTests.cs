@@ -39,7 +39,7 @@ namespace ReaderTesting
             Stock stk = allStocks["ABEV3"];
 
             List<string> mDates =
-                (from string d in stk.marketHistory.Keys
+                (from string d in stk.MarketDatas.Keys
                  orderby d ascending
                  select d).ToList();
 

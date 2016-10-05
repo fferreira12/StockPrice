@@ -5,17 +5,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockPrice.Elements
+namespace StockPrice
 {
     //this class' role is to simplify the access of items through the MarketData objects
     //it should implement some indexer methods to ease the access
     //it should implement some of interfaces (yet to be created)
-    public class MarketHistory : IMarketDataRetriever, IEnumerable
+    public class MarketHistory : IMarketDataIndexer, IGetLaster, IEnumerable
     {
 
-        List<string> dates;
-        Dictionary<string, MarketData> marketDatas;
+        #region fields
+        private List<string> dates;
+        private Dictionary<string, MarketData> marketDatas;
+        #endregion
 
+        #region constructors
+        public MarketHistory()
+        {
+            dates = new List<string>();
+            marketDatas = new Dictionary<string, MarketData>();
+        }
+        public MarketHistory(Dictionary<string,MarketData> markethistory) : this()
+        {
+            this.MarketDatas = markethistory;
+        }
+        #endregion
+
+        #region indexer methods
         //access by date string
         public MarketData this[string date]
         {
@@ -43,7 +58,9 @@ namespace StockPrice.Elements
                 marketDatas[dates[index]] = value;
             }
         }
+        #endregion
 
+        #region properties
         public List<string> Dates
         {
             //read only, just a change in marketDatas will refresh it
@@ -53,25 +70,27 @@ namespace StockPrice.Elements
             }
         }
 
-        public Dictionary<string,MarketData> MarketDatas
+        public Dictionary<string, MarketData> MarketDatas
         {
             //write only, since this class will provide better ways to read its data
             set
             {
                 marketDatas = value;
-                //when setting the market data, refresh the 
+                //when setting the market data, refresh the dates
                 dates =
                     (from d in marketDatas.Keys
                      orderby d
                      select d).ToList();
             }
-        }
+        } 
+        #endregion
 
         public IEnumerable<MarketData> GetLastNMarKetDatas(int n, string refDate)
         {
             IEnumerable<MarketData> last =
                 (from d in dates
-                 where dates.IndexOf(refDate) - dates.IndexOf(d) < n
+                 where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
+                       dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
                  orderby d
                  select marketDatas[d]);
 
@@ -82,7 +101,8 @@ namespace StockPrice.Elements
         {
             IEnumerable<decimal> last =
                 (from d in dates
-                 where dates.IndexOf(refDate) - dates.IndexOf(d) < n
+                 where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
+                       dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
                  orderby d
                  select marketDatas[d].closePrice);
 

@@ -207,7 +207,7 @@ namespace StockPrice
             
             //does not add the stock
             //mData.stock = stock; 
-            mData.date = ConvertStringToDateTime(date);
+            mData.Date = ConvertStringToDateTime(date);
             mData.avgPrice = GetNumericInfo(line, MarketNumericInfo.AVGPRICE);
             mData.closePrice = GetNumericInfo(line, MarketNumericInfo.CLOSEPRICE);
             mData.maxPrice = GetNumericInfo(line, MarketNumericInfo.MAXPRICE);
@@ -254,7 +254,7 @@ namespace StockPrice
                 {
                     Stock stk = new Stock()
                     {
-                        marketHistory = new Dictionary<string, MarketData>(),
+                        MarketDatas = new Dictionary<string, MarketData>(),
                         stockCode = paperCode
                     };
                     allStocks.Add(paperCode, stk);
@@ -271,7 +271,7 @@ namespace StockPrice
                 //only if market type is mercado a vista (010)
                 if (mData.marketType == 10m)
                 {
-                    allStocks[paperCode].marketHistory.Add(dateString, mData); 
+                    allStocks[paperCode].MarketDatas.Add(dateString, mData); 
                 }
             }
 
@@ -284,7 +284,7 @@ namespace StockPrice
 
             foreach(KeyValuePair<string, Stock> stkPair in allStocks)
             {
-                if(stkPair.Value.marketHistory.Count > 0)
+                if(stkPair.Value.MarketDatas.Count > 0)
                 {
                     cleanedStocks.Add(stkPair.Key, stkPair.Value);
                 }

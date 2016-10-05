@@ -20,9 +20,9 @@ namespace ReaderTesting
             m3.closePrice = 20m;
 
             Stock stk = new Stock();
-            stk.marketHistory.Add("20160104", m1);
-            stk.marketHistory.Add("20160105", m2);
-            stk.marketHistory.Add("20160106", m3);
+            stk.MarketDatas.Add("20160104", m1);
+            stk.MarketDatas.Add("20160105", m2);
+            stk.MarketDatas.Add("20160106", m3);
 
             decimal avg3 = Analyzer.SimpleMovingAvg(stk, 3);
             decimal avg2Limited = Analyzer.SimpleMovingAvg(stk, 2, "20160105");
@@ -56,11 +56,11 @@ namespace ReaderTesting
             m5.closePrice = 50m;
 
             Stock stk = new Stock();
-            stk.marketHistory.Add("20160104", m1);
-            stk.marketHistory.Add("20160105", m2);
-            stk.marketHistory.Add("20160106", m3);
-            stk.marketHistory.Add("20160107", m4);
-            stk.marketHistory.Add("20160108", m5);
+            stk.MarketDatas.Add("20160104", m1);
+            stk.MarketDatas.Add("20160105", m2);
+            stk.MarketDatas.Add("20160106", m3);
+            stk.MarketDatas.Add("20160107", m4);
+            stk.MarketDatas.Add("20160108", m5);
 
             decimal EMA1 = Analyzer.ExponentialMovingAvg(stk, 3);
             decimal EMA2 = Analyzer.ExponentialMovingAvg(stk, 3, "20160107");
@@ -79,7 +79,7 @@ namespace ReaderTesting
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
             Stock petr = new Stock();
-            petr.marketHistory = mData;
+            petr.MarketDatas = mData;
 
             decimal EMA = Analyzer.ExponentialMovingAvg(petr, 9);
         }
@@ -92,7 +92,7 @@ namespace ReaderTesting
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
             Stock petr = new Stock();
-            petr.marketHistory = mData;
+            petr.MarketDatas = mData;
 
             decimal AccDist = Analyzer.AccumulationDistribution(petr, startValue:-295529140.2642m);
         }

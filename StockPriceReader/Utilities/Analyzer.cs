@@ -25,13 +25,13 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return zero
-            if(stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period)
+            if(stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period)
             {
                 return 0m;
             }
 
             //get all strings that represent dates (keys)
-            List<string> dateKeys = stk.marketHistory.Keys.ToList();
+            List<string> dateKeys = stk.MarketDatas.Keys.ToList();
             
             //recent first (descending)
             List<string> orderedKeys;
@@ -56,7 +56,7 @@ namespace StockPrice
 
             for(int i = 0; i < period; i++)
             {
-                sum += stk.marketHistory[orderedKeys[i]].closePrice;
+                sum += stk.MarketDatas[orderedKeys[i]].closePrice;
             }
 
             decimal avg = sum / period;
@@ -71,7 +71,7 @@ namespace StockPrice
 
             //check to see if the calculation is possible
             //if not, return false
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < periodShort ||
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < periodShort ||
                 (periodLong <= periodShort && periodLong != 0 && periodShort != 0))
             {
                 return false;
@@ -89,7 +89,7 @@ namespace StockPrice
 
             //all dates
             List<string> allDates =
-                (from d in stk.marketHistory.Keys
+                (from d in stk.MarketDatas.Keys
                  orderby d
                  select d).ToList();
 
@@ -97,7 +97,7 @@ namespace StockPrice
             decimal sumShort = 0, sumLong = 0;
             for (int i = 0; i < periodLong; i++)
             {
-                decimal actualVal = stk.marketHistory[allDates[i]].closePrice;
+                decimal actualVal = stk.MarketDatas[allDates[i]].closePrice;
                 sumLong += actualVal;
                 if (i < periodShort)
                 {
@@ -124,20 +124,20 @@ namespace StockPrice
                 decimal newVal = 0;
                 if (i-1 >= 0)
                 {
-                    newVal = stk.marketHistory[allDates[i]].closePrice; 
+                    newVal = stk.MarketDatas[allDates[i]].closePrice; 
                 }
 
                 //if short sma calc is possible
                 if (i >= periodShort)
                 {
-                    sumShort -= stk.marketHistory[allDates[i-periodShort]].closePrice;
+                    sumShort -= stk.MarketDatas[allDates[i-periodShort]].closePrice;
                     sumShort += newVal;
                 }
 
                 //if long sma calc is possible
                 if(i >= periodLong)
                 {
-                    sumLong -= stk.marketHistory[allDates[i - periodLong]].closePrice;
+                    sumLong -= stk.MarketDatas[allDates[i - periodLong]].closePrice;
                     sumLong += newVal;
                 }
 
@@ -197,7 +197,7 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return 0m;
             }
@@ -208,7 +208,7 @@ namespace StockPrice
             if (referenceDate != "")
             {
                 allDates =
-                        (from string d in stk.marketHistory.Keys
+                        (from string d in stk.MarketDatas.Keys
                          where d.CompareTo(referenceDate) <= 0 //get only items until the specified date
                          orderby d ascending
                          select d).ToList();
@@ -216,7 +216,7 @@ namespace StockPrice
             else
             {
                 allDates =
-                        (from string d in stk.marketHistory.Keys
+                        (from string d in stk.MarketDatas.Keys
                          orderby d ascending
                          select d).ToList();
             }
@@ -248,7 +248,7 @@ namespace StockPrice
             for(int i = 0; i < EMADates.Count; i++)
             {
 
-                decimal close = stk.marketHistory[EMADates[i]].closePrice;
+                decimal close = stk.MarketDatas[EMADates[i]].closePrice;
                 todayEMA = ((close - todayEMA) * multiplier) + todayEMA;
                 //lastDayEMA = todayEMA; //i could pretty much use just one variable that keeps changing itself
                 
@@ -265,7 +265,7 @@ namespace StockPrice
             {
                 MarketData m = new MarketData();
                 m.closePrice = kvp.Value;
-                stk.marketHistory.Add(kvp.Key, m);
+                stk.MarketDatas.Add(kvp.Key, m);
             }
             decimal EMA = ExponentialMovingAvg(stk, period, referenceDate);
             return EMA;
@@ -275,7 +275,7 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return false
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < periodShort ||
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < periodShort ||
                 (periodLong <= periodShort && periodLong != 0 && periodShort != 0))
             {
                 return false;
@@ -293,7 +293,7 @@ namespace StockPrice
 
             //all dates
             List<string> allDates =
-                (from d in stk.marketHistory.Keys
+                (from d in stk.MarketDatas.Keys
                  orderby d
                  select d).ToList();
 
@@ -302,7 +302,7 @@ namespace StockPrice
             decimal avgShort = 0, avgLong = 0;
             for (int i = 0; i < periodLong; i++)
             {
-                decimal actualVal = stk.marketHistory[allDates[i]].closePrice;
+                decimal actualVal = stk.MarketDatas[allDates[i]].closePrice;
                 avgLong += actualVal;
                 if (i < periodShort)
                 {
@@ -333,7 +333,7 @@ namespace StockPrice
                 
                 if (EMAShortValues.Count >= periodShort)
                 {
-                    newValShort = (stk.marketHistory[allDates[i]].closePrice - newValShort) * shortMultiplier + newValShort;
+                    newValShort = (stk.MarketDatas[allDates[i]].closePrice - newValShort) * shortMultiplier + newValShort;
                 }
                 else
                 {
@@ -342,7 +342,7 @@ namespace StockPrice
 
                 if (EMALongValues.Count >= periodLong)
                 {
-                    newValLong = (stk.marketHistory[allDates[i]].closePrice - newValLong) * longMultiplier + newValLong;
+                    newValLong = (stk.MarketDatas[allDates[i]].closePrice - newValLong) * longMultiplier + newValLong;
                 }
                 else
                 {
@@ -413,7 +413,7 @@ namespace StockPrice
             {
 
                 date =
-                    (from d in stk.marketHistory.Keys
+                    (from d in stk.MarketDatas.Keys
                      orderby d descending
                      select d).ToArray()[0];
 
@@ -424,7 +424,7 @@ namespace StockPrice
             }
 
             var orderedDates =
-                from d in stk.marketHistory.Keys
+                from d in stk.MarketDatas.Keys
                 where d.CompareTo(date) <= 0
                 orderby d
                 select d;
@@ -435,7 +435,7 @@ namespace StockPrice
 
             foreach(string d in orderedDates)
             {
-                MarketData mData = stk.marketHistory[d];
+                MarketData mData = stk.MarketDatas[d];
                 decimal close = mData.closePrice;
                 decimal low = mData.minPrice;
                 decimal high = mData.maxPrice;
@@ -454,7 +454,7 @@ namespace StockPrice
         {
 
             var orderedDates =
-                from d in stk.marketHistory.Keys
+                from d in stk.MarketDatas.Keys
                 orderby d
                 select d;
 
@@ -466,7 +466,7 @@ namespace StockPrice
 
             foreach (string d in orderedDates)
             {
-                MarketData mData = stk.marketHistory[d];
+                MarketData mData = stk.MarketDatas[d];
                 decimal close = mData.closePrice;
                 decimal low = mData.minPrice;
                 decimal high = mData.maxPrice;
@@ -500,14 +500,14 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return 0m;
             }
 
             //all dates
             List<string> dates =
-                (from string d in stk.marketHistory.Keys
+                (from string d in stk.MarketDatas.Keys
                 orderby d
                 select d).ToList();
 
@@ -517,8 +517,8 @@ namespace StockPrice
             for (int i = 1; i < dates.Count; i++) //start at the second (index 1)
             {
                 decimal todayClose, yesterdayClose;
-                todayClose = stk.marketHistory[dates[i]].closePrice;
-                yesterdayClose = stk.marketHistory[dates[i-1]].closePrice;
+                todayClose = stk.MarketDatas[dates[i]].closePrice;
+                yesterdayClose = stk.MarketDatas[dates[i-1]].closePrice;
                 changes.Add(todayClose - yesterdayClose);
             }
 
@@ -544,7 +544,7 @@ namespace StockPrice
             if (referenceDate == "")
             {
                 date =
-                    (from d in stk.marketHistory.Keys
+                    (from d in stk.MarketDatas.Keys
                      orderby d descending
                      select d).ToArray()[0];
 
@@ -611,7 +611,7 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return false;
             }
@@ -624,7 +624,7 @@ namespace StockPrice
 
             //all dates
             List<string> dates =
-                (from string d in stk.marketHistory.Keys
+                (from string d in stk.MarketDatas.Keys
                  orderby d
                  select d).ToList();
 
@@ -636,13 +636,13 @@ namespace StockPrice
             {
                 if (i == 1)
                 {
-                    yesterdayClose = stk.marketHistory[dates[i - 1]].closePrice; 
+                    yesterdayClose = stk.MarketDatas[dates[i - 1]].closePrice; 
                 }
                 else
                 {
                     yesterdayClose = todayClose;
                 }
-                todayClose = stk.marketHistory[dates[i]].closePrice;
+                todayClose = stk.MarketDatas[dates[i]].closePrice;
                 changes.Add(todayClose - yesterdayClose);
             }
 
@@ -751,14 +751,14 @@ namespace StockPrice
 
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return 0m;
             }
 
             //allDates
             List<string> allDates =
-                (from d in stk.marketHistory.Keys
+                (from d in stk.MarketDatas.Keys
                  orderby d ascending
                  select d).ToList();
 
@@ -775,7 +775,7 @@ namespace StockPrice
             {
                 try
                 {
-                    mData.Add(allDates[i], stk.marketHistory[allDates[i]]);
+                    mData.Add(allDates[i], stk.MarketDatas[allDates[i]]);
                 }
                 catch (Exception)
                 {
@@ -839,7 +839,7 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return false
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return false;
             }
@@ -852,7 +852,7 @@ namespace StockPrice
 
             //tried to make a local copy
             Dictionary<string, MarketData> localHist =
-                (from x in stk.marketHistory
+                (from x in stk.MarketDatas
                  select x).ToDictionary(x => x.Key, x => x.Value);
 
             //all dates
@@ -918,7 +918,7 @@ namespace StockPrice
         {
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < periodLong + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < periodLong + 1)
             {
                 return 0m;
             }
@@ -927,14 +927,14 @@ namespace StockPrice
             if (referenceDate == "")
             {
                 referenceDate =
-                    (from date in stk.marketHistory.Keys
+                    (from date in stk.MarketDatas.Keys
                      orderby date descending
                      select date).ElementAt(0);
             }
 
             //get all dates
             var allDates =
-                (from d in stk.marketHistory.Keys
+                (from d in stk.MarketDatas.Keys
                  where d.CompareTo(referenceDate) <= 0
                  orderby d ascending
                  select d).Distinct().ToList();
@@ -998,14 +998,14 @@ namespace StockPrice
 
             //check to see if the calculation is possible
             //if not, return zero
-            if (stk == null || stk.marketHistory == null || stk.marketHistory.Count == 0 || stk.marketHistory.Count < period + 1)
+            if (stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period + 1)
             {
                 return 0m;
             }
 
             //allDates
             List<string> allDates =
-                (from d in stk.marketHistory.Keys
+                (from d in stk.MarketDatas.Keys
                  orderby d
                  select d).ToList();
 
@@ -1038,14 +1038,14 @@ namespace StockPrice
             decimal oldClose = 0m;
             if (referenceDate == "")
             {
-                actualClose = stk.marketHistory[allDates.Last()].closePrice;
-                oldClose = stk.marketHistory[allDates[allDates.Count - period]].closePrice;
+                actualClose = stk.MarketDatas[allDates.Last()].closePrice;
+                oldClose = stk.MarketDatas[allDates[allDates.Count - period]].closePrice;
                 return 100 * (actualClose - oldClose) / oldClose;
             }
             else
             {
-                actualClose = stk.marketHistory[referenceDate].closePrice;
-                oldClose = stk.marketHistory[allDates[allDates.IndexOf(referenceDate) - period]].closePrice;
+                actualClose = stk.MarketDatas[referenceDate].closePrice;
+                oldClose = stk.MarketDatas[allDates[allDates.IndexOf(referenceDate) - period]].closePrice;
                 return 100 * (actualClose - oldClose) / oldClose;
             }
         }
@@ -1057,7 +1057,7 @@ namespace StockPrice
             {
                 AnalyticInfo indics = stk.indicators;
 
-                List<string> allDates = stk.marketHistory.Keys.OrderBy(o => o).ToList();
+                List<string> allDates = stk.MarketDatas.Keys.OrderBy(o => o).ToList();
 
                 for (int i = 0; i < allDates.Count; i++)
                 {
