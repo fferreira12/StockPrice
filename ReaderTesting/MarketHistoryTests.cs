@@ -13,7 +13,7 @@ namespace ReaderTesting
         public void TestCreateMarketHistoryWithVoidConstructor()
         {
 
-            MarketHistory mh = new MarketHistory();
+            MarketHistory mh = new MarketHistory(new Dictionary<string, MarketData>());
 
         }
 

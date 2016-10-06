@@ -16,20 +16,20 @@ namespace StockPrice
         #region fields
         //list of dates that are contained within the MarketDatas dictionary
         //it is supposed to be altered just when the marketDatas object is changed
-        private List<string> dates;
+        private List<string> dates = new List<string>();
 
         //internally keeps track of all market data
         //it is supposed to be filled by the reader class methods
-        private Dictionary<string, MarketData> marketDatas;
+        private Dictionary<string, MarketData> marketDatas = new Dictionary<string, MarketData>();
         #endregion
 
         #region constructors
         //basic constructor
         //initializes the fields
-        public MarketHistory()
+        private MarketHistory()
         {
-            dates = new List<string>();
-            marketDatas = new Dictionary<string, MarketData>();
+            //dates = new List<string>();
+            //marketDatas = new Dictionary<string, MarketData>();
         }
 
         //Dictionary constructor
@@ -37,6 +37,7 @@ namespace StockPrice
         public MarketHistory(Dictionary<string,MarketData> markethistory) : this()
         {
             this.MarketDatas = markethistory;
+            RefreshDates();
         }
         #endregion
 
@@ -89,10 +90,13 @@ namespace StockPrice
             {
                 marketDatas = value;
                 //when setting the market data, refresh the dates
-                dates =
-                    (from d in marketDatas.Keys
-                        orderby d
-                        select d).ToList();
+                RefreshDates();
+
+                //testing purposes
+                if(dates.Count != 0)
+                {
+
+                }
             }
         }
         #endregion
@@ -124,6 +128,17 @@ namespace StockPrice
             return last;
         }
 
+        private void RefreshDates()
+        {
+            dates =
+                    (from d in marketDatas.Keys
+                     orderby d
+                     select d).ToList();
+        }
+
+        #endregion
+
+        #region IEnumerable methods
         public IEnumerator<MarketData> GetEnumerator()
         {
             return new MarketHistoryEnumerator(this);
@@ -149,9 +164,9 @@ namespace StockPrice
         //            select d).ToList();
 
         //    return ((IEnumerable)listOfMD).GetEnumerator();
-        //}
-
+        //} 
         #endregion
+
     }
 
     public class MarketHistoryEnumerator : IEnumerator<MarketData>
@@ -163,6 +178,7 @@ namespace StockPrice
         public MarketHistoryEnumerator(MarketHistory mHist)
         {
             _mHistory = mHist;
+            
         }
 
         //fields controling the current item
