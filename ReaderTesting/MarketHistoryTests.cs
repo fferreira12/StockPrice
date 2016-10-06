@@ -94,5 +94,26 @@ namespace ReaderTesting
             var last15 = mh.GetLastNClosingPrices(15, mh[429].dateStr);
         }
         #endregion
+
+        #region enumerator tests
+
+        [TestMethod]
+        public void TestForEach()
+        {
+            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
+
+            MarketHistory mh = new MarketHistory(mData);
+
+            int mDatas = 0;
+
+            foreach(MarketData m in mh)
+            {
+                mDatas++;
+            }
+        }
+
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace StockPrice
     //this class' role is to simplify the access of items through the MarketData objects
     //it should implement some indexer methods to ease the access
     //it should implement some of interfaces (yet to be created)
-    public class MarketHistory : IMarketDataIndexer, IGetLaster, IEnumerable//<MarketData> //transform the non generic IEnumerable into a generic IEnumerable<MarketData>
+    public class MarketHistory : IMarketDataIndexer, IGetLaster, IEnumerable<MarketData> //transform the non generic IEnumerable into a generic IEnumerable<MarketData>
     {
 
         #region fields
@@ -98,44 +98,135 @@ namespace StockPrice
         #endregion
 
         #region methods
-            //commonly used by the Analyzer class
-            public IEnumerable<MarketData> GetLastNMarKetDatas(int n, string refDate)
-            {
-                IEnumerable<MarketData> last =
-                    (from d in dates
-                     where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
-                           dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
-                     orderby d
-                     select marketDatas[d]);
+        //commonly used by the Analyzer class
+        public IEnumerable<MarketData> GetLastNMarKetDatas(int n, string refDate)
+        {
+            IEnumerable<MarketData> last =
+                (from d in dates
+                    where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
+                        dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
+                    orderby d
+                    select marketDatas[d]);
 
-                return last;
-            }
+            return last;
+        }
 
-            //commonly used by the Analyzer class
-            public IEnumerable<decimal> GetLastNClosingPrices(int n, string refDate)
-            {
-                IEnumerable<decimal> last =
-                    (from d in dates
-                     where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
-                           dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
-                     orderby d
-                     select marketDatas[d].closePrice);
+        //commonly used by the Analyzer class
+        public IEnumerable<decimal> GetLastNClosingPrices(int n, string refDate)
+        {
+            IEnumerable<decimal> last =
+                (from d in dates
+                    where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
+                        dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
+                    orderby d
+                    select marketDatas[d].closePrice);
 
-                return last;
-            }
+            return last;
+        }
 
-            //will iterate through the KeyValuePairs in the dictionary?
-            //I want only the marketData
-            public IEnumerator GetEnumerator()
-            {
-                List<MarketData> listOfMD =
-                    (from d in marketDatas.Values
-                     orderby d.dateStr
-                     select d).ToList();
+        public IEnumerator<MarketData> GetEnumerator()
+        {
+            return new MarketHistoryEnumerator(this);
+        }
 
-                return ((IEnumerable)listOfMD).GetEnumerator();
-            }
+        private IEnumerator GetEnumerator1()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator1();
+        }
+
+        ////will iterate through the KeyValuePairs in the dictionary?
+        ////I want only the marketData
+        //public IEnumerator GetEnumerator()
+        //{
+        //    List<MarketData> listOfMD =
+        //        (from d in marketDatas.Values
+        //            orderby d.dateStr
+        //            select d).ToList();
+
+        //    return ((IEnumerable)listOfMD).GetEnumerator();
+        //}
 
         #endregion
+    }
+
+    public class MarketHistoryEnumerator : IEnumerator<MarketData>
+    {
+        //holds the items that will be enumerated through
+        private MarketHistory _mHistory;
+
+        //constructor that takes an MarketHistory
+        public MarketHistoryEnumerator(MarketHistory mHist)
+        {
+            _mHistory = mHist;
+        }
+
+        //fields controling the current item
+        private int _index = -1;
+        private MarketData _current = null;
+
+        //Current function, returns a MarketData
+        public MarketData Current
+        {
+            get
+            {
+                if(_mHistory == null ||_current == null)
+                {
+                    throw new InvalidOperationException();
+                }
+                return _current;
+            }
+        }
+
+        //private current 1
+        //just returns the public Current
+        private MarketData Current1
+        {
+            get
+            {
+                return this.Current;
+            }
+        }
+
+        //explicit Current of the enumerator, returns an general object
+        object IEnumerator.Current
+        {
+            get { return Current1; }
+        }
+
+        //private bool disposedValue = false;
+        public void Dispose()
+        {
+            //not implemented
+        }
+
+        //moves to the next item
+        public bool MoveNext()
+        {
+            if (_mHistory == null)
+            {
+                throw new InvalidOperationException();
+            }
+            try
+            {
+                _index++;   
+                _current = _mHistory[_index];
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public void Reset()
+        {
+            _index = 0;
+            _current = null;
+        }
     }
 }
