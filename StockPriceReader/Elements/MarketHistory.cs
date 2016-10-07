@@ -14,6 +14,7 @@ namespace StockPrice
     {
 
         #region fields
+
         //list of dates that are contained within the MarketDatas dictionary
         //it is supposed to be altered just when the marketDatas object is changed
         private List<string> dates = new List<string>();
@@ -21,9 +22,11 @@ namespace StockPrice
         //internally keeps track of all market data
         //it is supposed to be filled by the reader class methods
         private Dictionary<string, MarketData> marketDatas = new Dictionary<string, MarketData>();
+
         #endregion
 
         #region constructors
+
         //basic constructor
         //initializes the fields
         private MarketHistory()
@@ -36,9 +39,10 @@ namespace StockPrice
         //to ease the creation directly from a reader class method
         public MarketHistory(Dictionary<string,MarketData> markethistory) : this()
         {
-            this.MarketDatas = markethistory;
+            MarketDatas = markethistory;
             RefreshDates();
         }
+
         #endregion
 
         #region indexer methods
@@ -61,23 +65,41 @@ namespace StockPrice
         {
             get
             {
+                //if there is market data but the dates list has zero elements
+                if(dates.Count == 0 && marketDatas.Count > 0)
+                {
+                    RefreshDates();
+                }
                 return marketDatas[dates[index]];
             }
 
+            //different approach depending on wheter the item should be added or edited
             set
             {
-                marketDatas[dates[index]] = value;
+                if (marketDatas.ContainsKey(dates[index]))
+                {
+                    marketDatas[dates[index]] = value;
+                }
+                else
+                {
+                    marketDatas.Add(value.dateStr, value);
+                }
             }
         }
         #endregion
 
         #region properties
+
         //read only list of dates
         public List<string> Dates
         {
             //read only, just a change in marketDatas will refresh it
             get
             {
+                if(dates.Count == 0 && marketDatas.Count > 0)
+                {
+                    RefreshDates();
+                }
                 return dates;
             }
         }
@@ -99,9 +121,11 @@ namespace StockPrice
                 }
             }
         }
+
         #endregion
 
         #region methods
+
         //commonly used by the Analyzer class
         public IEnumerable<MarketData> GetLastNMarKetDatas(int n, string refDate)
         {
@@ -136,9 +160,25 @@ namespace StockPrice
                      select d).ToList();
         }
 
+        //get the index of a given date 
+        public int GetIndexOfDate(string date)
+        {
+            if(dates.Count == 0 && marketDatas.Count > 0)
+            {
+                RefreshDates();
+            }
+            return dates.IndexOf(date);
+        }
+
+        public int GetIndexOfDate(MarketData m)
+        {
+            return GetIndexOfDate(m.dateStr);
+        }
+
         #endregion
 
         #region IEnumerable methods
+
         public IEnumerator<MarketData> GetEnumerator()
         {
             return new MarketHistoryEnumerator(this);
@@ -165,6 +205,7 @@ namespace StockPrice
 
         //    return ((IEnumerable)listOfMD).GetEnumerator();
         //} 
+
         #endregion
 
     }
@@ -217,7 +258,8 @@ namespace StockPrice
         //private bool disposedValue = false;
         public void Dispose()
         {
-            //not implemented
+            //not sure if this will work
+            this._mHistory = null;
         }
 
         //moves to the next item
