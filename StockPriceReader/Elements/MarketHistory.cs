@@ -154,10 +154,14 @@ namespace StockPrice
 
         private void RefreshDates()
         {
-            dates =
-                    (from d in marketDatas.Keys
-                     orderby d
-                     select d).ToList();
+            //there is no point in refreshing if there is no market data
+            if (marketDatas != null && marketDatas.Count > 0)
+            {
+                dates =
+                            (from d in marketDatas.Keys
+                             orderby d
+                             select d).ToList(); 
+            }
         }
 
         //get the index of a given date 
