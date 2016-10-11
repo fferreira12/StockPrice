@@ -29,5 +29,25 @@ namespace ReaderTesting
 
             MarketHistoryAnalyzer.FillExponentialMovingAvg(ref petr);
         }
+
+        [TestMethod]
+        public void TestFillAccDist()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["PETR3"];
+
+            MarketHistoryAnalyzer.FillAccDist(ref petr, -306154896.4039m);
+        }
+
+        [TestMethod]
+        public void TestFillRSI()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["PETR3"];
+
+            MarketHistoryAnalyzer.FillRSI(ref petr, 14, 46.3393m);
+        }
     }
 }

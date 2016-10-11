@@ -70,7 +70,13 @@ namespace StockPrice
                 {
                     RefreshDates();
                 }
-                return marketDatas[dates[index]];
+                if (index >= 0)
+                {
+                    return marketDatas[dates[index]];
+                }else
+                {
+                    return null;
+                }
             }
 
             //different approach depending on wheter the item should be added or edited
@@ -177,6 +183,22 @@ namespace StockPrice
         public int GetIndexOfDate(MarketData m)
         {
             return GetIndexOfDate(m.dateStr);
+        }
+
+        public MarketData PreviousMarketData(string date)
+        {
+            return PreviousMarketData(GetIndexOfDate(date));
+        }
+        public MarketData PreviousMarketData(int index)
+        {
+            if (index > 0)
+            {
+                return this[index - 1]; 
+            }
+            else
+            {
+                return null;
+            }
         }
 
         #endregion
