@@ -39,4 +39,9 @@ namespace StockPrice
 
     }
 
+    public interface IGetLastInfo : IGetLaster
+    {
+        IEnumerable<decimal> GetLastNumericData(int n, string refDate, MarketNumericInfo infoToRetrieve);
+    }
+
 }
