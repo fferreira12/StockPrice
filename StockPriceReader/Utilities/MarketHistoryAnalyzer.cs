@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace StockPrice
 {
+
+    /*
+    This class role is to fill up the indicator in a stock
+    It will replace the Analyzer Class
+    */
+
     public class MarketHistoryAnalyzer
     {
 
@@ -92,6 +98,7 @@ namespace StockPrice
                     {
                         tempShort.Add(m.dateStr, 0m);
                     }
+                    
                 }
 
                 if(actualIndex == periodShort)
@@ -144,6 +151,131 @@ namespace StockPrice
             }
 
             return true;
+        }
+
+        public static bool FillAccDist(ref Stock stk, decimal startValue = 0m)
+        {
+
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            //local temporary Dictionary<string
+            Dictionary<string, decimal> allAccDist = new Dictionary<string, decimal>();
+            decimal actualAccDist = startValue;
+            foreach (MarketData m in stk.MarketHistory)
+            {
+                int index = stk.MarketHistory.GetIndexOfDate(m);
+                
+                if(index == 0)
+                {
+                    allAccDist.Add(m.dateStr, actualAccDist);
+                }
+                else
+                {
+
+                    decimal moneyFlowMultiplier = ((m.closePrice - m.minPrice) - (m.maxPrice - m.closePrice)) / (m.maxPrice - m.minPrice);
+                    decimal moneyFLowVolume = moneyFlowMultiplier * m.nOfPapersTraded;
+                    actualAccDist += moneyFLowVolume;
+                    allAccDist.Add(m.dateStr, actualAccDist);
+
+                }
+            }
+            if(allAccDist.Count == 0)
+            {
+                return false;
+            }
+            foreach(KeyValuePair<string, decimal> item in allAccDist)
+            {
+                stk.indicators.AccDist.Add(item.Key, item.Value);
+            }
+            return true;
+
+        }
+
+        public static bool FillRSI(ref Stock stk, int period = 0)
+        {
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            //get default period if zero
+            if(period == 0)
+            {
+                period = stk.indicators.RSIPeriod;
+            }
+
+            //it probably does NOT clone the object
+            Stock localStk = stk;
+
+            //first average gain and loss
+            var gains =
+                (from d in localStk.MarketHistory.Dates
+                 where localStk.MarketHistory.PreviousMarketData(d) != null &&
+                 localStk.MarketHistory[d].closePrice - localStk.MarketHistory.PreviousMarketData(d).closePrice >= 0m &&
+                 localStk.MarketHistory.GetIndexOfDate(d) < period
+                 orderby d
+                 select localStk.MarketHistory[d].closePrice - localStk.MarketHistory.PreviousMarketData(d).closePrice);
+            decimal avgGain = gains.Sum() / period;
+            var losses =
+                (from d in localStk.MarketHistory.Dates
+                 where localStk.MarketHistory.PreviousMarketData(d) != null &&
+                 localStk.MarketHistory[d].closePrice - localStk.MarketHistory.PreviousMarketData(d).closePrice <= 0m &&
+                 localStk.MarketHistory.GetIndexOfDate(d) < period
+                 orderby d
+                 select Math.Abs(localStk.MarketHistory[d].closePrice - localStk.MarketHistory.PreviousMarketData(d).closePrice));
+            decimal avgLoss = losses.Sum() / period;
+
+            //local dic for temporary storing values
+            Dictionary<string, decimal> allRSI = new Dictionary<string, decimal>();
+
+            //other gains and losses
+            foreach (MarketData m in stk.MarketHistory)
+            {
+                int index = stk.MarketHistory.GetIndexOfDate(m);
+                if(index > period)
+                {
+                    //test purposes
+                    if(avgGain < 0 || avgLoss < 0)
+                    {
+                        throw new Exception("Médias de ganhos e perdas não podem ser negativas");
+                    }
+                    
+                    decimal change = m.closePrice - stk.MarketHistory.GetLastNClosingPrices(2, m.dateStr).First();
+                    avgGain = change >= 0 ? (avgGain * (period-1) + change) / period : (avgGain * (period-1) + 0m) / period;
+                    avgLoss = change <= 0 ? (avgLoss * (period-1) + Math.Abs(change)) / period : (avgLoss * (period-1) + 0m) / period;
+                    decimal RS = avgGain / avgLoss;
+                    decimal RSI = avgLoss == 0m ? 100m : 100m - (100m / (1m + RS));
+                    allRSI.Add(m.dateStr, RSI); 
+                }
+                else if (index == period)
+                {
+                    decimal RS = avgGain / avgLoss;
+                    decimal RSI = avgLoss == 0m ? 100m : 100m-(100m/(1m+RS));
+                    allRSI.Add(m.dateStr, RSI);
+                }
+                else
+                {
+                    allRSI.Add(m.dateStr, 0m);
+                }
+            }
+
+            if (allRSI.Count == 0)
+            {
+                return false; 
+            }
+
+            foreach(KeyValuePair<string, decimal> item in allRSI)
+            {
+                stk.indicators.RSI.Add(item.Key, item.Value);
+            }
+
+            return true;
+
         }
 
     }

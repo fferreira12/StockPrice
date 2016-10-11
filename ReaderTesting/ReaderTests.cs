@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StockPrice;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ReaderTesting
 {
@@ -109,9 +110,15 @@ namespace ReaderTesting
             Assert.AreEqual(10.41m, stk.MarketDatas["20160601"].closePrice);
         }
 
-        
+        [TestMethod]
+        public void TestDateTimeFromString()
+        {
+            DateTime d1 = DateTime.ParseExact("20161009", "yyyyMMdd", CultureInfo.InvariantCulture);
+        }
 
-        
+
+
+
 
     }
 }
