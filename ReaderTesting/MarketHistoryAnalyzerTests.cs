@@ -59,5 +59,25 @@ namespace ReaderTesting
 
             MarketHistoryAnalyzer.FillAroon(ref petr, 14);
         }
+
+        [TestMethod]
+        public void TestFillMACD()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["PETR3"];
+
+            MarketHistoryAnalyzer.FillMACD(ref petr, 12, 26, 9);
+        }
+
+        [TestMethod]
+        public void TestFillROC()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["PETR3"];
+
+            MarketHistoryAnalyzer.FillROC(ref petr, 9);
+        }
     }
 }

@@ -390,7 +390,52 @@ namespace StockPrice
             //fill up the moving avgs that will be used
             FillExponentialMovingAvg(ref stk, periodShort, periodLong);
 
+            List<string> allDates = stk.MarketHistory.Dates;
+            for (int i = 0; i < stk.indicators.EMALong.Count; i++)
+            {
+                if(i < stk.indicators.EMAPeriodLong)
+                {
+                    stk.indicators.MACD.Add(allDates[i], 0m);
+                }
+                else
+                {
+                    stk.indicators.MACD.Add(allDates[i], stk.indicators.EMAShort[allDates[i]] - stk.indicators.EMALong[allDates[i]]);
+
+                }
+            }
+
+            return true;
         }
 
+        public static bool FillROC(ref Stock stk, int period = 0)
+        {
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < stk.MarketHistory.Count(); i++)
+            {
+                //all dates
+                List<string> dates = stk.MarketHistory.Dates;
+
+                //get defaults if zero
+                period = period == 0 ? stk.indicators.ROCPeriod : period;
+
+                if (i < period)
+                {
+                    stk.indicators.ROC.Add(dates[i], 0m);
+                }
+                else
+                {
+                    decimal nowClose = stk.MarketHistory[i].closePrice;
+                    decimal oldClose = stk.MarketHistory[i - period].closePrice;
+                    stk.indicators.ROC.Add(dates[i], 100m * (nowClose - oldClose)/oldClose);
+                }
+            }
+
+            return true;
+        }
     }
 }
