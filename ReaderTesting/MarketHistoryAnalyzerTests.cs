@@ -47,7 +47,17 @@ namespace ReaderTesting
 
             Stock petr = allStocks["PETR3"];
 
-            MarketHistoryAnalyzer.FillRSI(ref petr, 14, 46.3393m);
+            MarketHistoryAnalyzer.FillRSI(ref petr, 14);
+        }
+
+        [TestMethod]
+        public void TestFillAroon()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["PETR3"];
+
+            MarketHistoryAnalyzer.FillAroon(ref petr, 14);
         }
     }
 }

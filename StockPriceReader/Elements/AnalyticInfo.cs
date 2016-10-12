@@ -11,7 +11,7 @@ namespace StockPrice
 
         //TKey: string of date
         public Dictionary<string, decimal> SMAShort, SMALong, EMAShort, EMALong;
-        public Dictionary<string, decimal> RSI, ROC, MACD, AccDist, AroonOsc;
+        public Dictionary<string, decimal> RSI, ROC, MACD, AccDist, AroonOsc, AroonUp, AroonDown;
         public int SMAPeriodShort, SMAPeriodLong, EMAPeriodShort, EMAPeriodLong;
         public int RSIPeriod, ROCPeriod, AccDistStartValue, AroonOscPeriod;
         public int MACDPeriodShort, MACDPeriodLong, MACDPeriodSignal;
@@ -43,6 +43,8 @@ namespace StockPrice
             MACD = new Dictionary<string, decimal>();
             AccDist = new Dictionary<string, decimal>();
             AroonOsc = new Dictionary<string, decimal>();
+            AroonUp = new Dictionary<string, decimal>();
+            AroonDown = new Dictionary<string, decimal>();
 
         }
 

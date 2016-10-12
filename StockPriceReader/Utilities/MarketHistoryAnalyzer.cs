@@ -40,8 +40,25 @@ namespace StockPrice
                 decimal avgShort = lastClosesShort.Average();
                 decimal avgLong = lastMClosesLong.Average();
 
-                stk.indicators.SMALong.Add(m.dateStr, avgLong);
-                stk.indicators.SMAShort.Add(m.dateStr, avgShort);
+                //short eval
+                if (lastClosesShort.Count() == periodShort)
+                {
+                    stk.indicators.SMAShort.Add(m.dateStr, avgShort); 
+                }
+                else
+                {
+                    stk.indicators.SMAShort.Add(m.dateStr, 0m);
+                }
+
+                //long eval
+                if (lastMClosesLong.Count() == periodLong)
+                {
+                    stk.indicators.SMALong.Add(m.dateStr, avgLong);
+                }
+                else
+                {
+                    stk.indicators.SMALong.Add(m.dateStr, 0m);
+                }
 
                 tempLong.Add(m.dateStr, avgLong);
                 tempShort.Add(m.dateStr, avgShort);
@@ -275,6 +292,103 @@ namespace StockPrice
             }
 
             return true;
+
+        }
+
+        public static bool FillAroon(ref Stock stk, int period = 0)
+        {
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            //get defaults if zero
+            if (period == 0)
+            {
+                period = stk.indicators.AroonOscPeriod;
+            }
+
+            //local collections
+            Dictionary<string, decimal> aUps = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> aDowns = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> aOscs = new Dictionary<string, decimal>();
+
+            //general iterator
+            foreach (MarketData m in stk.MarketHistory)
+            {
+                int index = stk.MarketHistory.GetIndexOfDate(m);
+                if(index < period)
+                {
+                    aUps.Add(m.dateStr, 0m);
+                    aDowns.Add(m.dateStr, 0m);
+                    aOscs.Add(m.dateStr, 0m);
+                }
+                else
+                {
+                    //last n days closing prices
+                    IEnumerable<MarketData> lastMDatas = stk.MarketHistory.GetLastNMarKetDatas(period, m.dateStr);
+
+                    //order by closing price
+                    IEnumerable<MarketData> orderedMDatas =
+                        from md in lastMDatas
+                        orderby md.closePrice ascending
+                        select md;
+
+                    //high and low indexes
+                    MarketData low = orderedMDatas.First();
+                    MarketData high = orderedMDatas.Last();
+
+                    //days since high and low
+                    decimal daysSinceHigh = stk.MarketHistory.Dates.IndexOf(m.dateStr) - stk.MarketHistory.Dates.IndexOf(high.dateStr);
+                    decimal daysSinceLow = stk.MarketHistory.Dates.IndexOf(m.dateStr) - stk.MarketHistory.Dates.IndexOf(low.dateStr);
+
+                    //the max value daysSince can achieve is period-1
+                    //this way the range of aUp and aDown will vary from 0 to 100
+                    decimal aUp = 100m * ((period-1) - daysSinceHigh) / (period-1);
+                    decimal aDown = 100m * ((period-1) - daysSinceLow) / (period-1);
+                    decimal aOsc = aUp - aDown;
+
+                    //testing purposes
+                    if (m.dateStr == "20160926")
+                    {
+
+                    }
+
+                    aUps.Add(m.dateStr, aUp);
+                    aDowns.Add(m.dateStr, aDown);
+                    aOscs.Add(m.dateStr, aOsc);
+                }
+            }
+
+            List<string> dates = stk.MarketHistory.Dates;
+
+            for (int i = 0; i < aOscs.Count(); i++)
+            {
+                stk.indicators.AroonOsc.Add(dates[i], aOscs[dates[i]]);
+                stk.indicators.AroonUp.Add(dates[i], aUps[dates[i]]);
+                stk.indicators.AroonDown.Add(dates[i], aDowns[dates[i]]);
+            }
+
+            return true;
+
+        }
+
+        public static bool FillMACD(ref Stock stk, int periodShort, int periodLong, int periodSignal)
+        {
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            //get defaults if zero
+            periodShort = periodShort == 0 ? stk.indicators.MACDPeriodShort : periodShort;
+            periodLong = periodLong == 0 ? stk.indicators.MACDPeriodLong : periodLong;
+            periodSignal = periodSignal == 0 ? stk.indicators.MACDPeriodSignal : periodSignal;
+
+            //fill up the moving avgs that will be used
+            FillExponentialMovingAvg(ref stk, periodShort, periodLong);
 
         }
 

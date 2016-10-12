@@ -10,7 +10,7 @@ namespace StockPrice
     //this class' role is to simplify the access of items through the MarketData objects
     //it should implement some indexer methods to ease the access
     //it should implement some of interfaces (yet to be created)
-    public class MarketHistory : IMarketDataIndexer, IGetLaster, IEnumerable<MarketData> //transform the non generic IEnumerable into a generic IEnumerable<MarketData>
+    public class MarketHistory : IMarketDataIndexer, IGetLastInfo, IEnumerable<MarketData> //transform the non generic IEnumerable into a generic IEnumerable<MarketData>
     {
 
         #region fields
@@ -201,6 +201,70 @@ namespace StockPrice
             }
         }
 
+        public IEnumerable<decimal> GetLastNumericData(int n, string refDate, MarketNumericInfo infoToRetrieve)
+        {
+            //last market data, from which retrieve the numeric data
+            IEnumerable<MarketData> lastMData =
+                from d in Dates
+                where Dates.IndexOf(refDate) - Dates.IndexOf(d) < n
+                orderby d
+                select this[d];
+            IEnumerable<decimal> results = null;
+
+            switch (infoToRetrieve)
+            {
+                case MarketNumericInfo.AVGPRICE:
+                    results =
+                        from m in lastMData
+                        select m.avgPrice;
+                    break;
+                case MarketNumericInfo.CLOSEPRICE:
+                    results =
+                        from m in lastMData
+                        select m.closePrice;
+                    break;
+                case MarketNumericInfo.MARKETTYPE:
+                    results =
+                        from m in lastMData
+                        select m.marketType;
+                    break;
+                case MarketNumericInfo.MAXPRICE:
+                    results =
+                        from m in lastMData
+                        select m.maxPrice;
+                    break;
+                case MarketNumericInfo.MINPRICE:
+                    results =
+                        from m in lastMData
+                        select m.minPrice;
+                    break;
+                case MarketNumericInfo.NEGOTIATIONSNUMBER:
+                    results =
+                        from m in lastMData
+                        select m.nOfNegotiations;
+                    break;
+                case MarketNumericInfo.OPENPRICE:
+                    results =
+                        from m in lastMData
+                        select m.openPrice;
+                    break;
+                case MarketNumericInfo.PAPERSNUMBER:
+                    results =
+                        from m in lastMData
+                        select m.nOfPapersTraded;
+                    break;
+                case MarketNumericInfo.VOLUME:
+                    results =
+                        from m in lastMData
+                        select m.volume;
+                    break;
+            }
+
+            return results;
+
+        }
+
+
         #endregion
 
         #region IEnumerable methods
@@ -220,6 +284,7 @@ namespace StockPrice
             return GetEnumerator1();
         }
 
+        
         ////will iterate through the KeyValuePairs in the dictionary?
         ////I want only the marketData
         //public IEnumerator GetEnumerator()

@@ -93,6 +93,28 @@ namespace ReaderTesting
 
             var last15 = mh.GetLastNClosingPrices(15, mh[429].dateStr);
         }
+
+        [TestMethod]
+        public void TestGetLastNumericData()
+        {
+            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
+
+            MarketHistory mh = new MarketHistory(mData);
+
+            var avg = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.AVGPRICE);
+            var close = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.CLOSEPRICE);
+            var mkt = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MARKETTYPE);
+            var max = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MAXPRICE);
+            var min = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MINPRICE);
+            var neg = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.NEGOTIATIONSNUMBER);
+            var open = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.OPENPRICE);
+            var papers = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.PAPERSNUMBER);
+            var vol = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.VOLUME);
+
+           
+        }
         #endregion
 
         #region enumerator tests
