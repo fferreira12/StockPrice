@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -193,7 +194,15 @@ namespace StockPrice
                 else
                 {
 
-                    decimal moneyFlowMultiplier = ((m.closePrice - m.minPrice) - (m.maxPrice - m.closePrice)) / (m.maxPrice - m.minPrice);
+                    decimal moneyFlowMultiplier = 0;
+                    try
+                    {
+                        moneyFlowMultiplier = ((m.closePrice - m.minPrice) - (m.maxPrice - m.closePrice)) / (m.maxPrice - m.minPrice);
+                    }
+                    catch (DivideByZeroException)
+                    {
+                        moneyFlowMultiplier = 1m; //one or zero?
+                    }
                     decimal moneyFLowVolume = moneyFlowMultiplier * m.nOfPapersTraded;
                     actualAccDist += moneyFLowVolume;
                     allAccDist.Add(m.dateStr, actualAccDist);
@@ -350,10 +359,10 @@ namespace StockPrice
                     decimal aOsc = aUp - aDown;
 
                     //testing purposes
-                    if (m.dateStr == "20160926")
-                    {
+                    //if (m.dateStr == "20160926")
+                    //{
 
-                    }
+                    //}
 
                     aUps.Add(m.dateStr, aUp);
                     aDowns.Add(m.dateStr, aDown);
@@ -374,7 +383,7 @@ namespace StockPrice
 
         }
 
-        public static bool FillMACD(ref Stock stk, int periodShort, int periodLong, int periodSignal)
+        public static bool FillMACD(ref Stock stk, int periodShort = 0, int periodLong = 0, int periodSignal = 0)
         {
             //preliminar tests
             if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
@@ -436,6 +445,84 @@ namespace StockPrice
             }
 
             return true;
+        }
+
+        public static bool FillAllWithDefaults(Stock stk)
+        {
+            //preliminar tests
+            if (stk == null || stk.MarketHistory == null || stk.MarketHistory.Dates.Count == 0)
+            {
+                return false;
+            }
+
+            FillSimpleMovingAvg(ref stk);
+            //FillExponentialMovingAvg(ref stk); //the FillMACD already fills the EMAs
+            FillAccDist(ref stk);
+            FillRSI(ref stk);
+            FillAroon(ref stk);
+            FillMACD(ref stk);
+            FillROC(ref stk);
+
+            return true;
+        }
+
+        public static bool FillAllWithDefaults(List<Stock> allStks)
+        {
+            //attempt to make it parallel
+            ConcurrentQueue<Stock> concStocks = new ConcurrentQueue<Stock>();
+
+            //preliminar tests
+            if(allStks == null || allStks.Count == 0)
+            {
+                return false;
+            }
+
+            for(int i = 0; i < allStks.Count(); i++)
+            {
+                //FillAllWithDefaults(allStks[i]);
+                concStocks.Enqueue(allStks[i]);
+            }
+
+            Action fillUp = ( () =>
+            {
+                Stock s = null;
+
+                if(concStocks.TryDequeue(out s))
+                {
+                    FillAllWithDefaults(s);
+                }
+
+            });
+
+            Action[] actArr = new Action[allStks.Count];
+
+            for(int i = 0; i < allStks.Count; i++)
+            {
+                actArr[i] = fillUp;
+            }
+
+            Parallel.Invoke(fillUp, fillUp, fillUp, fillUp, fillUp);
+
+            return true;
+        }
+
+        public static bool FillAllWithDefaults(Dictionary<string, Stock> allStks)
+        {
+            //preliminar tests
+            if (allStks == null || allStks.Count == 0)
+            {
+                return false;
+            }
+
+            List<Stock> stksList = new List<Stock>();
+
+            foreach (KeyValuePair<string, Stock> kvp in allStks)
+            {
+                stksList.Add(kvp.Value);
+            }
+
+            return FillAllWithDefaults(stksList);
+
         }
     }
 }
