@@ -45,7 +45,7 @@
     <Compile Include="Elements\MarketData.cs" />
     <Compile Include="Elements\MarketHistory.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
-    <Compile Include="Utilities\Comparer.cs" />
+    <Compile Include="Utilities\StockComparer.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\MarketHistoryAnalyzer.cs" />
     <Compile Include="Utilities\Reader.cs" />
