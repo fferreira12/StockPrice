@@ -58,6 +58,8 @@
     <Compile Include="MixedTests.cs" />
     <Compile Include="MarketHistoryTests.cs" />
     <Compile Include="MarketHistoryAnalyzerTests.cs" />
+    <Compile Include="ComparerTests.cs" />
+    <Compile Include="AnalyticInfoTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StockPriceReader\StockPrice.csproj">

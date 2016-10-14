@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,23 @@ namespace StockPrice
         public int SMAPeriodShort, SMAPeriodLong, EMAPeriodShort, EMAPeriodLong;
         public int RSIPeriod, ROCPeriod, AccDistStartValue, AroonOscPeriod;
         public int MACDPeriodShort, MACDPeriodLong, MACDPeriodSignal;
+        //counts que quantity of indicators stores in a given instance
+        public int QuantityOfIndicators 
+        {
+            get
+            {
+                int sum = 0;
+                FieldInfo[] fields = GetType().GetFields(); 
+                foreach(FieldInfo f in fields)
+                {
+                    if(f.FieldType == typeof(Dictionary<string, decimal>))
+                    {
+                        sum += ((Dictionary<string, decimal>) f.GetValue(this)).Count();
+                    }
+                }
+                return sum;
+            }
+        }
 
         #region Constructors
         //main constructor
