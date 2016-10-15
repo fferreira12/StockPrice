@@ -44,21 +44,50 @@ namespace StockPrice
                 //short eval
                 if (lastClosesShort.Count() == periodShort)
                 {
-                    stk.indicators.SMAShort.Add(m.dateStr, avgShort); 
+                    try
+                    {
+                        stk.indicators.SMAShort.Add(m.dateStr, avgShort);
+                    }
+                    catch (Exception)
+                    {
+                        stk.indicators.SMAShort[m.dateStr] = avgShort;
+                    }
                 }
                 else
                 {
-                    stk.indicators.SMAShort.Add(m.dateStr, 0m);
+                    try
+                    {
+                        stk.indicators.SMAShort.Add(m.dateStr, 0m);
+                    }
+                    catch
+                    {
+                        stk.indicators.SMAShort[m.dateStr] = 0m;
+                    }
                 }
 
                 //long eval
                 if (lastMClosesLong.Count() == periodLong)
                 {
-                    stk.indicators.SMALong.Add(m.dateStr, avgLong);
+                    try
+                    {
+                        stk.indicators.SMALong.Add(m.dateStr, avgLong);
+                    }
+                    catch (Exception)
+                    {
+                        stk.indicators.SMALong[m.dateStr] = avgLong;
+                    }
                 }
                 else
                 {
-                    stk.indicators.SMALong.Add(m.dateStr, 0m);
+                    try
+                    {
+                        stk.indicators.SMALong.Add(m.dateStr, 0m);
+                    }
+                    catch
+                    {
+                        stk.indicators.SMALong[m.dateStr] = 0m;
+
+                    }
                 }
 
                 tempLong.Add(m.dateStr, avgLong);
@@ -215,7 +244,15 @@ namespace StockPrice
             }
             foreach(KeyValuePair<string, decimal> item in allAccDist)
             {
-                stk.indicators.AccDist.Add(item.Key, item.Value);
+                try
+                {
+                    stk.indicators.AccDist.Add(item.Key, item.Value);
+                }
+                catch (Exception)
+                {
+                    stk.indicators.AccDist[item.Key] = item.Value;
+
+                }
             }
             return true;
 
@@ -297,7 +334,14 @@ namespace StockPrice
 
             foreach(KeyValuePair<string, decimal> item in allRSI)
             {
-                stk.indicators.RSI.Add(item.Key, item.Value);
+                try
+                {
+                    stk.indicators.RSI.Add(item.Key, item.Value);
+                }
+                catch (Exception)
+                {
+                    stk.indicators.RSI[item.Key] = item.Value;
+                }
             }
 
             return true;
@@ -374,9 +418,30 @@ namespace StockPrice
 
             for (int i = 0; i < aOscs.Count(); i++)
             {
-                stk.indicators.AroonOsc.Add(dates[i], aOscs[dates[i]]);
-                stk.indicators.AroonUp.Add(dates[i], aUps[dates[i]]);
-                stk.indicators.AroonDown.Add(dates[i], aDowns[dates[i]]);
+                try
+                {
+                    stk.indicators.AroonOsc.Add(dates[i], aOscs[dates[i]]);
+                }
+                catch (Exception)
+                {
+
+                }
+                try
+                {
+                    stk.indicators.AroonUp.Add(dates[i], aUps[dates[i]]);
+                }
+                catch (Exception)
+                {
+
+                }
+                try
+                {
+                    stk.indicators.AroonDown.Add(dates[i], aDowns[dates[i]]);
+                }
+                catch (Exception)
+                {
+
+                }
             }
 
             return true;
@@ -404,11 +469,25 @@ namespace StockPrice
             {
                 if(i < stk.indicators.EMAPeriodLong)
                 {
-                    stk.indicators.MACD.Add(allDates[i], 0m);
+                    try
+                    {
+                        stk.indicators.MACD.Add(allDates[i], 0m);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
                 else
                 {
-                    stk.indicators.MACD.Add(allDates[i], stk.indicators.EMAShort[allDates[i]] - stk.indicators.EMALong[allDates[i]]);
+                    try
+                    {
+                        stk.indicators.MACD.Add(allDates[i], stk.indicators.EMAShort[allDates[i]] - stk.indicators.EMALong[allDates[i]]);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 
                 }
             }
@@ -434,13 +513,27 @@ namespace StockPrice
 
                 if (i < period)
                 {
-                    stk.indicators.ROC.Add(dates[i], 0m);
+                    try
+                    {
+                        stk.indicators.ROC.Add(dates[i], 0m);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
                 else
                 {
                     decimal nowClose = stk.MarketHistory[i].closePrice;
                     decimal oldClose = stk.MarketHistory[i - period].closePrice;
-                    stk.indicators.ROC.Add(dates[i], 100m * (nowClose - oldClose)/oldClose);
+                    try
+                    {
+                        stk.indicators.ROC.Add(dates[i], 100m * (nowClose - oldClose) / oldClose);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
             }
 

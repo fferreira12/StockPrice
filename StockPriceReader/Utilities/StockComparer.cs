@@ -15,10 +15,14 @@ namespace StockPrice
             //list of stocks that need to have indicators calculated
             List<Stock> toCalc =
                 (from st in allStks
-                 where st.indicators.QuantityOfIndicators == 0 && st.MarketHistory.Count() > 0
+                 where st.indicators.Punctuation > 0
                  select st).ToList();
             //recalculate
             MarketHistoryAnalyzer.FillAllWithDefaults(toCalc);
+            //foreach (Stock s in toCalc)
+            //{
+            //    MarketHistoryAnalyzer.FillAllWithDefaults(s);
+            //}
 
             //get only stocks with indicators
             var toCompare =

@@ -29,7 +29,7 @@ namespace StockPrice
         public Stock()
         {
             MarketDatas = new Dictionary<string, MarketData>();
-            indicators = new AnalyticInfo();
+            indicators = new AnalyticInfo(this);
         }
 
     }
