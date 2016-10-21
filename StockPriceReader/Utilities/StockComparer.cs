@@ -8,7 +8,81 @@ namespace StockPrice
 {
     public class StockComparer
     {
+        #region fields
 
+        private List<Stock> stocks;
+        private List<Stock> rankedStocks;
+
+        #endregion
+
+        #region properties
+
+        public List<Stock> Stocks
+        {
+            get
+            {
+                return stocks;
+            }
+            set
+            {
+                if(value != null)
+                {
+                    stocks = value;
+                }
+            }
+        }
+
+        public List<Stock> RankedStocks
+        {
+            get
+            {
+                return stocks;
+            }
+            
+        }
+
+        #endregion
+
+        #region constructors
+
+        public StockComparer(List<Stock> stocks)
+        {
+            this.stocks = stocks;
+        }
+
+        public StockComparer(Dictionary<string, Stock> stocks)
+        {
+
+            List<Stock> lis =
+                (from kvp in stocks
+                 select kvp.Value).ToList();
+
+            this.stocks = lis;
+        }
+
+        #endregion
+
+        #region indexers
+
+        public Stock this[int rank]
+        {
+            get
+            {
+                if(RankedStocks == null || rank > RankedStocks.Count)
+                {
+                    return null;
+                }
+                else
+                {
+                    return RankedStocks[rank - 1];
+                }
+            }
+        }
+
+        #endregion
+
+        #region methods
+        //deprecated
         public static List<Stock> RankOfBestStocks(List<Stock> allStks)
         {
             //verify if the indicators were not calculated
@@ -34,26 +108,26 @@ namespace StockPrice
             //should be percentage
             var SMARank =
                 (from Stock s in toCompare
-                orderby (s.indicators.SMAShort.Last().Value - s.indicators.SMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
-                select s.stockCode).ToList();
+                 orderby (s.indicators.SMAShort.Last().Value - s.indicators.SMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
+                 select s.stockCode).ToList();
 
             //rank EMA
             var EMARank =
                 (from Stock s in toCompare
-                orderby (s.indicators.EMAShort.Last().Value - s.indicators.EMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
-                select s.stockCode).ToList();
+                 orderby (s.indicators.EMAShort.Last().Value - s.indicators.EMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
+                 select s.stockCode).ToList();
 
             //rank RSI
             var RSIRank =
                 (from Stock s in toCompare
-                orderby s.indicators.RSI descending
-                select s.stockCode).ToList();
+                 orderby s.indicators.RSI descending
+                 select s.stockCode).ToList();
 
             //rank Aroon
             var AroonRank =
                 (from Stock s in toCompare
-                orderby s.indicators.AroonOsc descending
-                select s.stockCode).ToList();
+                 orderby s.indicators.AroonOsc descending
+                 select s.stockCode).ToList();
 
             //get values from the indexes of the ranks
             Dictionary<Stock, int> points = new Dictionary<Stock, int>();
@@ -75,15 +149,84 @@ namespace StockPrice
 
 
         }
-        
-        public static List<Stock> RankOfBestStocks(Dictionary<string,Stock> allStks)
+
+        public static List<Stock> RankOfBestStocks(Dictionary<string, Stock> allStks)
         {
             var stks =
                 (from s in allStks
                  select s.Value).ToList();
 
             return RankOfBestStocks(stks);
+        } 
+
+        public bool RankBestStocks(int quantity = 10)
+        {
+            //verify if the indicators were not calculated
+            //list of stocks that need to have indicators calculated
+            List<Stock> toCalc =
+                (from st in stocks
+                 //where st.indicators.Punctuation > 0
+                 select st).ToList();
+            //recalculate
+            MarketHistoryAnalyzer.FillAllWithDefaults(toCalc);
+            //foreach (Stock s in toCalc)
+            //{
+            //    MarketHistoryAnalyzer.FillAllWithDefaults(s);
+            //}
+
+            //get only stocks with indicators
+            var toCompare =
+                from st in toCalc
+                where st.indicators.QuantityOfIndicators > 0
+                select st;
+
+            //rank SMA
+            //should be percentage
+            var SMARank =
+                (from Stock s in toCompare
+                 orderby (s.indicators.SMAShort.Last().Value - s.indicators.SMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
+                 select s.stockCode).ToList();
+
+            //rank EMA
+            var EMARank =
+                (from Stock s in toCompare
+                 orderby (s.indicators.EMAShort.Last().Value - s.indicators.EMALong.Last().Value) / s.MarketHistory.Last().closePrice descending
+                 select s.stockCode).ToList();
+
+            //rank RSI
+            var RSIRank =
+                (from Stock s in toCompare
+                 orderby s.indicators.RSI descending
+                 select s.stockCode).ToList();
+
+            //rank Aroon
+            var AroonRank =
+                (from Stock s in toCompare
+                 orderby s.indicators.AroonOsc descending
+                 select s.stockCode).ToList();
+
+            //get values from the indexes of the ranks
+            Dictionary<Stock, int> points = new Dictionary<Stock, int>();
+            foreach (Stock stk in toCompare)
+            {
+                points.Add(stk, 0);
+                points[stk] += SMARank.IndexOf(stk.stockCode);
+                points[stk] += EMARank.IndexOf(stk.stockCode);
+                points[stk] += RSIRank.IndexOf(stk.stockCode);
+                points[stk] += AroonRank.IndexOf(stk.stockCode);
+            }
+
+            List<Stock> rankList =
+                (from s in points
+                 orderby s.Value
+                 select s.Key).Take(quantity).ToList();
+
+            rankedStocks = rankList;
+
+            return true;
         }
+
+        #endregion
 
     }
 }

@@ -10,7 +10,7 @@ namespace ReaderTesting
     public class ComparerTests
     {
         [TestMethod]
-        public void TestRankOfBestStocks()
+        public void TestRankOfBestStocks() //static
         {
 
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
@@ -18,6 +18,22 @@ namespace ReaderTesting
             MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);
 
             List<Stock> stkRank = StockComparer.RankOfBestStocks(allStocks);
+
+        }
+
+        [TestMethod]
+        public void TestRankObjectLevel()
+        {
+
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);
+
+            StockComparer sc = new StockComparer(allStocks);
+
+            sc.RankBestStocks();
+
+            List<Stock> rank = sc.RankedStocks;
 
         }
     }

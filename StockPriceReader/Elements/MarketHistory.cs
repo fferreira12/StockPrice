@@ -70,7 +70,7 @@ namespace StockPrice
                 {
                     RefreshDates();
                 }
-                if (index >= 0)
+                if (index >= 0 && marketDatas.Count > index)
                 {
                     return marketDatas[dates[index]];
                 }else
@@ -324,7 +324,8 @@ namespace StockPrice
             {
                 if(_mHistory == null ||_current == null)
                 {
-                    throw new InvalidOperationException();
+                    //throw new InvalidOperationException();
+                    return null;
                 }
                 return _current;
             }

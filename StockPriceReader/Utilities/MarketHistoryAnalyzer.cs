@@ -30,6 +30,8 @@ namespace StockPrice
 
             int valuesAdded = 0;
 
+            
+
             Dictionary<string, decimal> tempLong = new Dictionary<string, decimal>();
             Dictionary<string, decimal> tempShort = new Dictionary<string, decimal>();
 
@@ -189,12 +191,27 @@ namespace StockPrice
 
             foreach(KeyValuePair<string, decimal> item in tempLong)
             {
-                stk.indicators.EMALong.Add(item.Key, item.Value);
+                try
+                {
+                    stk.indicators.EMALong.Add(item.Key, item.Value);
+                }
+                catch
+                {
+                    stk.indicators.EMALong[item.Key] = item.Value;
+
+                }
             }
 
             foreach (KeyValuePair<string, decimal> item in tempShort)
             {
-                stk.indicators.EMAShort.Add(item.Key, item.Value);
+                try
+                {
+                    stk.indicators.EMAShort.Add(item.Key, item.Value);
+                }
+                catch
+                {
+                    stk.indicators.EMAShort[item.Key] = item.Value;
+                }
             }
 
             return true;
@@ -594,7 +611,7 @@ namespace StockPrice
                 actArr[i] = fillUp;
             }
 
-            Parallel.Invoke(fillUp, fillUp, fillUp, fillUp, fillUp);
+            Parallel.Invoke(actArr);
 
             return true;
         }
