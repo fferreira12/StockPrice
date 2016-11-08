@@ -73,7 +73,8 @@ namespace StockPrice
                 if (index >= 0 && marketDatas.Count > index)
                 {
                     return marketDatas[dates[index]];
-                }else
+                }
+                else
                 {
                     return null;
                 }

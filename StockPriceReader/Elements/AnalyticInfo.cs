@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace StockPrice
 {
+
+    /*
+     This class is not flexible enough
+         */
+
     public class AnalyticInfo
     {
 

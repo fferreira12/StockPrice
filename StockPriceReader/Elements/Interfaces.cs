@@ -44,4 +44,9 @@ namespace StockPrice
         IEnumerable<decimal> GetLastNumericData(int n, string refDate, MarketNumericInfo infoToRetrieve);
     }
 
+    public interface ICalculateIndicator
+    {
+        decimal CalculateIndicator(Stock stock, string refDate);
+    }
+
 }

@@ -31,6 +31,7 @@ namespace StockPrice
                 dateStr = _date.ToString("yyyyMMdd");
             }
         }
+
         public string dateStr;
         public decimal marketType;
         public decimal minPrice, maxPrice;
