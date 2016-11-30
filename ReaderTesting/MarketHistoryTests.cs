@@ -79,7 +79,7 @@ namespace ReaderTesting
 
             MarketHistory mh = new MarketHistory(mData);
 
-            var last15 = mh.GetLastNMarKetDatas(15, mh[429].dateStr);
+            var last15 = mh.GetLastNMarKetDatas(15, mh[225].dateStr);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace ReaderTesting
 
             MarketHistory mh = new MarketHistory(mData);
 
-            var last15 = mh.GetLastNClosingPrices(15, mh[429].dateStr);
+            var last15 = mh.GetLastNClosingPrices(15, mh[225].dateStr);
         }
 
         [TestMethod]
@@ -103,15 +103,15 @@ namespace ReaderTesting
 
             MarketHistory mh = new MarketHistory(mData);
 
-            var avg = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.AVGPRICE);
-            var close = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.CLOSEPRICE);
-            var mkt = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MARKETTYPE);
-            var max = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MAXPRICE);
-            var min = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.MINPRICE);
-            var neg = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.NEGOTIATIONSNUMBER);
-            var open = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.OPENPRICE);
-            var papers = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.PAPERSNUMBER);
-            var vol = mh.GetLastNumericData(15, mh[429].dateStr, MarketNumericInfo.VOLUME);
+            var avg = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.AVGPRICE);
+            var close = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.CLOSEPRICE);
+            var mkt = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.MARKETTYPE);
+            var max = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.MAXPRICE);
+            var min = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.MINPRICE);
+            var neg = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.NEGOTIATIONSNUMBER);
+            var open = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.OPENPRICE);
+            var papers = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.PAPERSNUMBER);
+            var vol = mh.GetLastNumericData(15, mh[225].dateStr, MarketNumericInfo.VOLUME);
 
            
         }

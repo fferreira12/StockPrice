@@ -13,6 +13,7 @@ namespace StockPrice
      *   One day produces one MarketData
      */
 
+    [Serializable]
     public class MarketData
     {
 

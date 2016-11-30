@@ -120,8 +120,18 @@ namespace StockPrice
             }
 
             //starter values
-            decimal starterShort = stk.MarketHistory.GetLastNClosingPrices(periodShort, stk.MarketHistory[periodShort].dateStr).Average();
-            decimal starterLong = stk.MarketHistory.GetLastNClosingPrices(periodLong, stk.MarketHistory[periodLong].dateStr).Average();
+            decimal starterShort = 0;
+            decimal starterLong = 0;
+            try
+            {
+                starterShort = stk.MarketHistory.GetLastNClosingPrices(periodShort, stk.MarketHistory[periodShort].dateStr).Average();
+                starterLong = stk.MarketHistory.GetLastNClosingPrices(periodLong, stk.MarketHistory[periodLong].dateStr).Average();
+
+            }
+            catch (NullReferenceException)
+            {
+                return false;
+            }
 
             //multipliers
             decimal multShort = (2m / (periodShort + 1m));
@@ -328,13 +338,29 @@ namespace StockPrice
                     decimal change = m.closePrice - stk.MarketHistory.GetLastNClosingPrices(2, m.dateStr).First();
                     avgGain = change >= 0 ? (avgGain * (period-1) + change) / period : (avgGain * (period-1) + 0m) / period;
                     avgLoss = change <= 0 ? (avgLoss * (period-1) + Math.Abs(change)) / period : (avgLoss * (period-1) + 0m) / period;
-                    decimal RS = avgGain / avgLoss;
+                    decimal RS = 0;
+                    try
+                    {
+                        RS = avgGain / avgLoss;
+                    }
+                    catch (DivideByZeroException)
+                    {
+                        RS = -1;
+                    }
                     decimal RSI = avgLoss == 0m ? 100m : 100m - (100m / (1m + RS));
                     allRSI.Add(m.dateStr, RSI); 
                 }
                 else if (index == period)
                 {
-                    decimal RS = avgGain / avgLoss;
+                    decimal RS = 0;
+                    try
+                    {
+                        RS = avgGain / avgLoss;
+                    }
+                    catch (DivideByZeroException)
+                    {
+                        RS = -1;
+                    }
                     decimal RSI = avgLoss == 0m ? 100m : 100m-(100m/(1m+RS));
                     allRSI.Add(m.dateStr, RSI);
                 }
@@ -631,7 +657,16 @@ namespace StockPrice
                 stksList.Add(kvp.Value);
             }
 
-            return FillAllWithDefaults(stksList);
+            bool worked = FillAllWithDefaults(stksList);
+
+            //since this method takes long, create a serialized object for later retrieval
+            StockState sc = new StockState(allStks);
+
+            sc.Serialize("stocksWithIndicators.bin");
+
+            return worked;
+
+
 
         }
     }

@@ -46,6 +46,7 @@
     <Compile Include="Elements\Interfaces.cs" />
     <Compile Include="Elements\MarketData.cs" />
     <Compile Include="Elements\MarketHistory.cs" />
+    <Compile Include="Elements\StockState.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
     <Compile Include="Utilities\StockComparer.cs" />
     <Compile Include="Utilities\Extensions.cs" />

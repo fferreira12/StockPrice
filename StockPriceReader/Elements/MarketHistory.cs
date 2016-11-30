@@ -10,6 +10,7 @@ namespace StockPrice
     //this class' role is to simplify the access of items through the MarketData objects
     //it should implement some indexer methods to ease the access
     //it should implement some of interfaces (yet to be created)
+    [Serializable]
     public class MarketHistory : IMarketDataIndexer, IGetLastInfo, IEnumerable<MarketData> //transform the non generic IEnumerable into a generic IEnumerable<MarketData>
     {
 
@@ -103,7 +104,7 @@ namespace StockPrice
             //read only, just a change in marketDatas will refresh it
             get
             {
-                if(dates.Count == 0 && marketDatas.Count > 0)
+                if(dates.Count != marketDatas.Count)
                 {
                     RefreshDates();
                 }
@@ -149,12 +150,12 @@ namespace StockPrice
         //commonly used by the Analyzer class
         public IEnumerable<decimal> GetLastNClosingPrices(int n, string refDate)
         {
-            IEnumerable<decimal> last =
+            var last =
                 (from d in dates
-                    where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
-                        dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
-                    orderby d
-                    select marketDatas[d].closePrice);
+                 where dates.IndexOf(refDate) - dates.IndexOf(d) < n &&
+                     dates.IndexOf(refDate) - dates.IndexOf(d) >= 0
+                 orderby d
+                 select marketDatas[d].closePrice);//marketDatas[d].closePrice);
 
             return last;
         }
@@ -174,7 +175,7 @@ namespace StockPrice
         //get the index of a given date 
         public int GetIndexOfDate(string date)
         {
-            if(dates.Count == 0 && marketDatas.Count > 0)
+            if(dates.Count != marketDatas.Count)
             {
                 RefreshDates();
             }
@@ -306,11 +307,13 @@ namespace StockPrice
     {
         //holds the items that will be enumerated through
         private MarketHistory _mHistory;
+        private int maxIndex = 0;
 
         //constructor that takes an MarketHistory
         public MarketHistoryEnumerator(MarketHistory mHist)
         {
             _mHistory = mHist;
+            maxIndex = mHist.Dates.Count - 1;
             
         }
 
@@ -364,11 +367,17 @@ namespace StockPrice
             }
             try
             {
-                _index++;   
+                _index++;
+                //test purposes
+                if(_index > maxIndex)
+                {
+                    return false;
+                }
+
                 _current = _mHistory[_index];
                 return true;
             }
-            catch (Exception)
+            catch (IndexOutOfRangeException)
             {
                 return false;
             }

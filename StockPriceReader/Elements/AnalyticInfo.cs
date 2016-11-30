@@ -12,6 +12,7 @@ namespace StockPrice
      This class is not flexible enough
          */
 
+    [Serializable]
     public class AnalyticInfo
     {
 

@@ -114,6 +114,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAllWithDefaultsWithDictionary()
         {
+
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
 
             MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);

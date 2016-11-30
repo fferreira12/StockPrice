@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace StockPrice
 {
+
+    [Serializable]
     public class Stock
     {
         public string stockCode;

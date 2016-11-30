@@ -284,7 +284,7 @@ namespace StockPrice
 
             foreach(KeyValuePair<string, Stock> stkPair in allStocks)
             {
-                if(stkPair.Value.MarketDatas.Count > 0)
+                if(stkPair.Value.MarketHistory.Count() > 0)
                 {
                     cleanedStocks.Add(stkPair.Key, stkPair.Value);
                 }

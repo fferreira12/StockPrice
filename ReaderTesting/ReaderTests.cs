@@ -4,6 +4,7 @@ using StockPrice;
 using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace ReaderTesting
 {
@@ -116,7 +117,23 @@ namespace ReaderTesting
             DateTime d1 = DateTime.ParseExact("20161009", "yyyyMMdd", CultureInfo.InvariantCulture);
         }
 
+        [TestMethod]
+        public void TestRemoveStocksWithoutMarketData()
+        {
+            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
+            allStocks["PETR3"].MarketHistory = new MarketHistory(new Dictionary<string, MarketData>());
+
+            Dictionary<string, Stock> nonBlank = Reader.RemoveStocksWithoutMarketData(allStocks);
+
+            Stock blank =
+                (from s in allStocks
+                 where s.Value.MarketHistory.Count() == 0
+                 select s).First().Value;
+
+            Assert.AreNotEqual(allStocks.Count, nonBlank.Count);
+        }
 
 
 
