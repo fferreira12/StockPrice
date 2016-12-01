@@ -45,6 +45,10 @@ namespace ReaderTesting
 
             //StockComparer sc = new StockComparer(allStocks);
             List <Stock> rank = StockComparer.RankOfBestStocks(dailyTradedStocks);
+
+            StockState sc = new StockState(rank);
+            sc.Serialize("rankedStocks.bin");
+
         }
         #endregion
     }

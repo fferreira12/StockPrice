@@ -23,6 +23,16 @@ namespace StockPrice
             this.stocks = stocks;
         }
 
+        public StockState(List<Stock> stocks)
+        {
+            Dictionary<string, Stock> dic = new Dictionary<string, Stock>();
+            foreach(Stock s in stocks)
+            {
+                dic.Add(stocks.IndexOf(s).ToString(), s);
+            }
+            this.stocks = dic;
+        }
+
         //void constructor for when you want to deserialize
         public StockState()
         {

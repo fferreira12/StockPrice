@@ -48,6 +48,7 @@
     <Compile Include="Elements\MarketHistory.cs" />
     <Compile Include="Elements\StockState.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
+    <Compile Include="Utilities\EmailNotifier.cs" />
     <Compile Include="Utilities\StockComparer.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\MarketHistoryAnalyzer.cs" />
