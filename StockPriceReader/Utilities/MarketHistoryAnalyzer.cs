@@ -660,9 +660,9 @@ namespace StockPrice
             bool worked = FillAllWithDefaults(stksList);
 
             //since this method takes long, create a serialized object for later retrieval
-            StockState sc = new StockState(allStks);
+            //StockState sc = new StockState(allStks);
 
-            sc.Serialize("stocksWithIndicators.bin");
+            //sc.Serialize("stocksWithIndicators.bin");
 
             return worked;
 

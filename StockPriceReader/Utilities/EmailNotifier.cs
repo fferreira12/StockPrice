@@ -37,5 +37,21 @@ namespace StockPrice
             //msg.Attachments.Add(at);
             Send(msg);
         }
+
+        public void Send(List<Stock> rankedStocks)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int i = 1;
+            foreach (Stock s in rankedStocks)
+            {
+                sb.Append(i + ". " + s.stockCode + "\n");
+                i++;
+            }
+
+            string subject = "StockMarket Analysis - " + DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToShortTimeString();
+
+            Send(subject, sb.ToString());
+        }
     }
 }

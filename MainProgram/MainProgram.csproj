@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5A1FCE0E-343E-481E-9E5B-2690872AA020}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{AA40D691-2ED4-43ED-A9F7-12AFED623990}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StockPrice</RootNamespace>
-    <AssemblyName>StockPrice</AssemblyName>
+    <RootNamespace>MainProgram</RootNamespace>
+    <AssemblyName>MainProgram</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,23 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elements\AnalyticInfo.cs" />
-    <Compile Include="Elements\Indicator.cs" />
-    <Compile Include="Elements\Indicators.cs" />
-    <Compile Include="Elements\Interfaces.cs" />
-    <Compile Include="Elements\MarketData.cs" />
-    <Compile Include="Elements\MarketHistory.cs" />
-    <Compile Include="Elements\StockState.cs" />
-    <Compile Include="Utilities\Analyzer.cs" />
-    <Compile Include="Utilities\Decaptcher.cs" />
-    <Compile Include="Utilities\EmailNotifier.cs" />
-    <Compile Include="Utilities\HistoryFileSelector.cs" />
-    <Compile Include="Utilities\StockComparer.cs" />
-    <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\MarketHistoryAnalyzer.cs" />
-    <Compile Include="Utilities\Reader.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Elements\Stock.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StockPriceReader\StockPrice.csproj">
+      <Project>{5a1fce0e-343e-481e-9e5b-2690872aa020}</Project>
+      <Name>StockPrice</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
