@@ -50,6 +50,22 @@ namespace ReaderTesting
             sc.Serialize("rankedStocks.bin");
 
         }
+
+        [TestMethod]
+        public void TestRankStocksByCompare()
+        {
+            StockState ss = new StockState();
+
+            Dictionary<string, Stock> allStocks = ss.Deserialize("stocksWithIndicators.bin");
+
+            List<Stock> tradedEveryDay = StockComparer.RemoveStocksNotTradedEveryday(allStocks);
+
+            StockComparer sc = new StockComparer(tradedEveryDay);
+
+            sc.RankStocksByCompare();
+
+
+        }
         #endregion
     }
 }

@@ -38,8 +38,8 @@ namespace MainProgram
                 MarketHistoryAnalyzer.FillAllWithDefaults(stocks);
 
                 Console.WriteLine("Saving to disk");
-                StockState sc = new StockState(stocks);
-                sc.Serialize("stocksWithIndicators.bin");
+                StockState sc1 = new StockState(stocks);
+                sc1.Serialize("stocksWithIndicators.bin");
             }
 
             
@@ -47,16 +47,20 @@ namespace MainProgram
             Console.WriteLine("Removing stocks not traded every day");
             List<Stock> tradedEveryday = StockComparer.RemoveStocksNotTradedEveryday(stocks);
 
+            Console.WriteLine("Creating Stock Comparator");
+            StockComparer sc = new StockComparer(tradedEveryday);
+
             Console.WriteLine("Running comparison");
-            List<Stock> rankedStocks = StockComparer.RankOfBestStocks(tradedEveryday);
+            //List<Stock> rankedStocks = StockComparer.RankOfBestStocks(tradedEveryday);
+            sc.RankStocksByCompare();
 
             Console.WriteLine("Saving to disk");
-            StockState sc2 = new StockState(stocks);
+            StockState sc2 = new StockState(sc.RankedStocks);
             sc2.Serialize("rankedStocks.bin");
 
             Console.WriteLine("Emailing results");
             EmailNotifier en = new EmailNotifier("ff12sender", "33914047");
-            en.Send(rankedStocks);
+            en.Send(sc.RankedStocks);
 
             Console.WriteLine("All done. Check your email");
             Console.WriteLine("Press any key to exit");

@@ -106,24 +106,82 @@ namespace StockPrice
 
         private decimal Punctuate(string refDate = "")
         {
-            //preliminar tests
-            if(SMALong.Count == 0 || SMAShort.Count == 0 || RSI.Count == 0 || ROC.Count == 0 || MACD.Count == 0 || AroonOsc.Count == 0)
+            ////preliminar tests
+            //if(SMALong.Count == 0 || SMAShort.Count == 0 || RSI.Count == 0 || ROC.Count == 0 || MACD.Count == 0 || AroonOsc.Count == 0)
+            //{
+            //    return 0m;
+            //}
+
+            //decimal SMAPoints = 100m * SMAShort.Last().Value / SMALong.Last().Value;
+            //decimal EMAPoints = 100m * EMAShort.Last().Value / EMALong.Last().Value;
+            //decimal RSIPoints = RSI.Last().Value;
+            //decimal ROCPoints = 100m * ROC.Last().Value;
+            //decimal MACDPoints = 100m * MACD.Last().Value;
+            //decimal AOSCPoints = AroonOsc.Last().Value;
+
+            //decimal totalPoints = 0;
+
+            //totalPoints += SMAPoints + EMAPoints + RSIPoints + ROCPoints + MACDPoints + AOSCPoints;
+
+            //return totalPoints;
+
+            decimal xSum = 0;
+
+            if(QuantityOfIndicators == 0)
             {
-                return 0m;
+                Recalculate();
             }
 
-            decimal SMAPoints = 100m * SMAShort.Last().Value / SMALong.Last().Value;
-            decimal EMAPoints = 100m * EMAShort.Last().Value / EMALong.Last().Value;
-            decimal RSIPoints = RSI.Last().Value;
-            decimal ROCPoints = 100m * ROC.Last().Value;
-            decimal MACDPoints = 100m * MACD.Last().Value;
-            decimal AOSCPoints = AroonOsc.Last().Value;
+            try
+            {
+                xSum += SMAShort.Last().Value / SMALong.Last().Value;
+            }
+            catch (Exception)
+            {
 
-            decimal totalPoints = 0;
+            }
+            try
+            {
+                xSum += SMAShort.Last().Value / stk.MarketHistory.Last().closePrice;
+            }
+            catch (Exception)
+            {
 
-            totalPoints += SMAPoints + EMAPoints + RSIPoints + ROCPoints + MACDPoints + AOSCPoints;
+            }
+            try
+            {
+                xSum += EMAShort.Last().Value / EMALong.Last().Value;
+            }
+            catch (Exception)
+            {
 
-            return totalPoints;
+            }
+            try
+            {
+                xSum += EMAShort.Last().Value / stk.MarketHistory.Last().closePrice;
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                xSum += RSI.Last().Value / 100;
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                xSum += AroonOsc.Last().Value / 100;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return xSum;
         }
 
         #endregion

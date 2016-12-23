@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StockPrice
@@ -25,7 +26,25 @@ namespace StockPrice
             client.EnableSsl = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.Credentials = new NetworkCredential(Username, Password);
-            client.Send(msg);
+            bool success = false;
+            while (!success)
+            {
+                try
+                {
+                    client.Send(msg);
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    success = false;
+                    Console.WriteLine(e.Message);
+                    Thread.Sleep(10000);
+                    EmailNotifier en = new EmailNotifier("ff12sender", "33914047");
+
+                    en.Send(msg);
+
+                } 
+            }
         }
 
         public void Send(string subject, string message)//, string attachmentStr)
@@ -43,9 +62,12 @@ namespace StockPrice
             StringBuilder sb = new StringBuilder();
 
             int i = 1;
+
+            sb.Append("i.  " + "\t\t" + "Code" + "\t\t" + "Points" + "\n");
+
             foreach (Stock s in rankedStocks)
             {
-                sb.Append(i + ". " + s.stockCode + "\n");
+                sb.Append(i.ToString("000") + ".\t\t" + s.stockCode.PadRight(10, ' ') + "\t\t" + s.indicators.Punctuation.ToString("0.###") + "\n");
                 i++;
             }
 

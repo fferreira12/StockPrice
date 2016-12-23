@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StockPrice;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ReaderTesting
 {
@@ -17,6 +18,8 @@ namespace ReaderTesting
             StockState sc = new StockState(allStocks);
 
             sc.Serialize("stocks.bin");
+
+            Assert.IsTrue(File.Exists("stocks.bin"));
         }
 
         [TestMethod]
@@ -25,6 +28,8 @@ namespace ReaderTesting
             StockState sc = new StockState();
 
             Dictionary<string, Stock> allStocks = sc.Deserialize("stocks.bin");
+
+            Assert.AreNotEqual(null, allStocks);
         }
     }
 }

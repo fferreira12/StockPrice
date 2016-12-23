@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StockPrice
 {
-    public class StockComparer
+    public class StockComparer : IComparer<Stock>
     {
         #region fields
 
@@ -36,7 +36,7 @@ namespace StockPrice
         {
             get
             {
-                return stocks;
+                return rankedStocks;
             }
             
         }
@@ -58,6 +58,12 @@ namespace StockPrice
                  select kvp.Value).ToList();
 
             this.stocks = lis;
+        }
+
+        //void constructor to use IComparer
+        public StockComparer()
+        {
+
         }
 
         #endregion
@@ -245,6 +251,119 @@ namespace StockPrice
                  select s.Value).ToList();
 
             return allMax;
+        }
+
+        public bool RankStocksByCompare()
+        {
+            if(stocks != null)
+            {
+                try
+                {
+                    rankedStocks = stocks.Clone().ToList();
+                    rankedStocks.Sort(new StockComparer());
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public int Compare(Stock x, Stock y)
+        {
+            //starter tests
+            if(x.MarketHistory == null || x.indicators == null || x.MarketHistory.Count() == 0 || x.indicators.QuantityOfIndicators == 0)
+            {
+                if ( y.MarketHistory == null || y.indicators == null || y.MarketHistory.Count() == 0 || y.indicators.QuantityOfIndicators == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+
+            }
+
+            //decimal xSum = 0, ySum = 0;
+
+            //try
+            //{
+            //    xSum += x.indicators.SMAShort.Last().Value / x.indicators.SMALong.Last().Value;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    xSum += x.indicators.SMAShort.Last().Value / x.MarketHistory.Last().closePrice;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    xSum += x.indicators.EMAShort.Last().Value / x.indicators.EMALong.Last().Value;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    xSum += x.indicators.EMAShort.Last().Value / x.MarketHistory.Last().closePrice;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //xSum += x.indicators.RSI.Last().Value / 100;
+            //xSum += x.indicators.AroonOsc.Last().Value / 100;
+
+
+            //try
+            //{
+            //    ySum += y.indicators.SMAShort.Last().Value / y.indicators.SMALong.Last().Value;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    ySum += y.indicators.SMAShort.Last().Value / y.MarketHistory.Last().closePrice;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    ySum += y.indicators.EMAShort.Last().Value / y.indicators.EMALong.Last().Value;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //try
+            //{
+            //    ySum += y.indicators.EMAShort.Last().Value / y.MarketHistory.Last().closePrice;
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+            //ySum += y.indicators.RSI.Last().Value / 100;
+            //ySum += y.indicators.AroonOsc.Last().Value / 100;
+
+            return x.indicators.Punctuation.CompareTo(y.indicators.Punctuation) * -1;
         }
 
         #endregion

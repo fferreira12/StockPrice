@@ -37,5 +37,17 @@ namespace ReaderTesting
 
             int indsAfter = petr.indicators.QuantityOfIndicators;
         }
+
+        [TestMethod]
+        public void TestPunctuate()
+        {
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+
+            Stock petr = allStocks["VALE3"];
+
+            decimal points = petr.indicators.Punctuation;
+
+            Assert.AreNotEqual(0m, points);
+        }
     }
 }
