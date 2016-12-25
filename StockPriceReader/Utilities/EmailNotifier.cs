@@ -63,11 +63,11 @@ namespace StockPrice
 
             int i = 1;
 
-            sb.Append("i.  " + "\t\t" + "Code" + "\t\t" + "Points" + "\n");
+            sb.Append("i.  " + "\t\t" + "Code      " + "\t\t" + "Points" + "\n");
 
             foreach (Stock s in rankedStocks)
             {
-                sb.Append(i.ToString("000") + ".\t\t" + s.stockCode.PadRight(10, ' ') + "\t\t" + s.indicators.Punctuation.ToString("0.###") + "\n");
+                sb.Append(i.ToString("000") + ".\t\t" + s.stockCode.PadRight(10, '-') + "\t\t" + s.indicators.Punctuation.ToString("0.###") + "\n");
                 i++;
             }
 

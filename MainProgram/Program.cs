@@ -5,13 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using StockPrice;
 using System.IO;
+using System.Diagnostics;
 
 namespace MainProgram
 {
     class Program
     {
+        static Stopwatch sw = new Stopwatch();
+
         static void Main(string[] args)
         {
+            
             Console.WriteLine("Creating stock dictionary");
             Dictionary<string, Stock> stocks = new Dictionary<string, Stock>();
 
@@ -35,7 +39,9 @@ namespace MainProgram
                 stocks = Reader.GetAllStockData(mostRecent);
 
                 Console.WriteLine("Analyzing data");
-                MarketHistoryAnalyzer.FillAllWithDefaults(stocks);
+                sw.Start();
+                MarketHistoryAnalyzer.FillAllWithDefaults(stocks, PrintProgress);
+                sw.Stop();
 
                 Console.WriteLine("Saving to disk");
                 StockState sc1 = new StockState(stocks);
@@ -67,6 +73,12 @@ namespace MainProgram
 
             Console.ReadKey();
 
+        }
+
+        static void PrintProgress(decimal percent)
+        {
+            double ETA = sw.Elapsed.TotalSeconds / (double) percent - sw.Elapsed.TotalSeconds;
+            Console.WriteLine($"Analysis {(100m*percent).ToString("0.00")}% complete. Time: {((int)sw.Elapsed.TotalMinutes).ToString("00")}m {sw.Elapsed.Seconds.ToString("00")}s. ETA: {(int)ETA/60}m {(int)ETA % 60}s");
         }
     }
 }

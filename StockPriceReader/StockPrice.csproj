@@ -85,6 +85,7 @@
     <Compile Include="Elements\StockState.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
     <Compile Include="Utilities\Decaptcher.cs" />
+    <Compile Include="Utilities\Delegates.cs" />
     <Compile Include="Utilities\EmailNotifier.cs" />
     <Compile Include="Utilities\Gmail.cs" />
     <Compile Include="Utilities\HistoryFileSelector.cs" />

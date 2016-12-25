@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StockPrice
@@ -15,6 +16,8 @@ namespace StockPrice
 
     public class MarketHistoryAnalyzer
     {
+        //for thread safety purposes
+        public static object threadLocker = new object();
 
         public static bool FillSimpleMovingAvg(ref Stock stk, int periodShort = 0, int periodLong = 0)
         {
@@ -602,10 +605,12 @@ namespace StockPrice
             return true;
         }
 
-        public static bool FillAllWithDefaults(List<Stock> allStks)
+        public static bool FillAllWithDefaults(List<Stock> allStks, ProgressInformer pi = null)
         {
             //attempt to make it parallel
             ConcurrentQueue<Stock> concStocks = new ConcurrentQueue<Stock>();
+            int progress = 0;
+            int total = allStks.Count();
 
             //preliminar tests
             if(allStks == null || allStks.Count == 0)
@@ -626,6 +631,11 @@ namespace StockPrice
                 if(concStocks.TryDequeue(out s))
                 {
                     FillAllWithDefaults(s);
+                    Interlocked.Increment(ref progress);
+                    lock (threadLocker)
+                    {
+                        pi?.Invoke((decimal) progress / total);
+                    }
                 }
 
             });
@@ -642,7 +652,7 @@ namespace StockPrice
             return true;
         }
 
-        public static bool FillAllWithDefaults(Dictionary<string, Stock> allStks)
+        public static bool FillAllWithDefaults(Dictionary<string, Stock> allStks, ProgressInformer pi = null)
         {
             //preliminar tests
             if (allStks == null || allStks.Count == 0)
@@ -657,7 +667,7 @@ namespace StockPrice
                 stksList.Add(kvp.Value);
             }
 
-            bool worked = FillAllWithDefaults(stksList);
+            bool worked = FillAllWithDefaults(stksList, pi);
 
             //since this method takes long, create a serialized object for later retrieval
             //StockState sc = new StockState(allStks);
