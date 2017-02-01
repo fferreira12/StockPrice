@@ -9,13 +9,13 @@
         Title="Stock Price Analisys" Height="350" Width="525">
     <Grid>
         <TextBox x:Name="fileLocationTxtBox" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="497"/>
-        <Button x:Name="SelectFileBtn" Content="Choose File" HorizontalAlignment="Center" Margin="10,38,367,0" VerticalAlignment="Top" Width="140" Click="SelectFileBtn_Click" Height="24"/>
+        <Button x:Name="SelectFileBtn" Content="Choose File" HorizontalAlignment="Center" Margin="10,38,339,0" VerticalAlignment="Top" Width="168" Click="SelectFileBtn_Click" Height="24"/>
         <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="31" Margin="10,98,0,0" VerticalAlignment="Top" Width="497"
                       />
         <Label x:Name="percentageLbl" Content="" HorizontalAlignment="Left" Margin="10,67,0,0" VerticalAlignment="Top" Width="497" HorizontalContentAlignment="Center" />
 
         <Label x:Name="additionalInfoLbl" Content="" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Height="175" Width="497"/>
-        <Button x:Name="RunBtn" Content="Run Analysis" HorizontalAlignment="Center" Margin="155,38,222,0" VerticalAlignment="Top" Width="140" Height="24" Click="RunBtn_Click"/>
+        <Button x:Name="RunBtn" Content="Run Analysis" HorizontalAlignment="Center" Margin="367,38,10,0" VerticalAlignment="Top" Width="140" Height="24" Click="RunBtn_Click"/>
 
     </Grid>
 </Window>
