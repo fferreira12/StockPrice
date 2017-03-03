@@ -89,6 +89,7 @@
     <Compile Include="Utilities\EmailNotifier.cs" />
     <Compile Include="Utilities\Gmail.cs" />
     <Compile Include="Utilities\HistoryFileSelector.cs" />
+    <Compile Include="Utilities\MACDComparer.cs" />
     <Compile Include="Utilities\StockComparer.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\MarketHistoryAnalyzer.cs" />

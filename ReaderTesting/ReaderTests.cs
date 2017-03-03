@@ -11,6 +11,14 @@ namespace ReaderTesting
     [TestClass]
     public class ReaderTests
     {
+
+        [TestMethod]
+        public void TestGetAllLinesFromPath()
+        {
+            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Assert.IsNotNull(allLines);
+        }
+
         [TestMethod]
         public void TestGetReadableStream()
         {
@@ -88,7 +96,7 @@ namespace ReaderTesting
 
             List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
 
-            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("UCAS3", allLines);
+            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
         }
 
