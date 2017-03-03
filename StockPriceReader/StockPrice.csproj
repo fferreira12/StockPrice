@@ -78,11 +78,11 @@
   <ItemGroup>
     <Compile Include="Elements\AnalyticInfo.cs" />
     <Compile Include="Elements\Indicator.cs" />
-    <Compile Include="Elements\Indicators.cs" />
     <Compile Include="Elements\Interfaces.cs" />
     <Compile Include="Elements\MarketData.cs" />
     <Compile Include="Elements\MarketHistory.cs" />
     <Compile Include="Elements\StockState.cs" />
+    <Compile Include="Indicators\SimpleMovingAverage.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
     <Compile Include="Utilities\Decaptcher.cs" />
     <Compile Include="Utilities\Delegates.cs" />
