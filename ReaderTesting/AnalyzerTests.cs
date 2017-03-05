@@ -9,6 +9,18 @@ namespace ReaderTesting
     [TestClass]
     public class AnalyzerTests
     {
+        List<string> allLines;
+        Dictionary<string, Stock> allStocks;
+        Stock petr;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
+            allStocks = Reader.GetAllStockData(allLines);
+            petr = allStocks["PETR3"];
+        }
+
         [TestMethod]
         public void TestSimpleMovingAvg()
         {
@@ -74,12 +86,12 @@ namespace ReaderTesting
         public void TestEMA2()
         {
 
-            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
-            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
+            //Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
-            Stock petr = new Stock();
-            petr.MarketDatas = mData;
+            //Stock petr = new Stock();
+            //petr.MarketDatas = mData;
 
             decimal EMA = Analyzer.ExponentialMovingAvg(petr, 9);
         }
@@ -87,12 +99,12 @@ namespace ReaderTesting
         [TestMethod]
         public void TestAccDist()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
-            Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
+            //Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
-            Stock petr = new Stock();
-            petr.MarketDatas = mData;
+            //Stock petr = new Stock();
+            //petr.MarketDatas = mData;
 
             decimal AccDist = Analyzer.AccumulationDistribution(petr, startValue:-295529140.2642m);
         }
@@ -100,9 +112,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestRSI()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
             Dictionary<string, decimal> allRSI = new Dictionary<string, decimal>();
             Dictionary<string, decimal> allOverbought = new Dictionary<string, decimal>();
             Dictionary<string, decimal> allOversold = new Dictionary<string, decimal>();
@@ -138,98 +150,98 @@ namespace ReaderTesting
         [TestMethod]
         public void TestAroonOsc()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            decimal aOsc = Analyzer.AroonOscillator(stk, 14);
+            decimal aOsc = Analyzer.AroonOscillator(petr, 14);
 
         }
 
         [TestMethod]
         public void TestMACD()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            decimal MACD = Analyzer.MACD(stk, 12, 26, 9, "20160819");
+            decimal MACD = Analyzer.MACD(petr, 12, 26, 9, "20160819");
         }
 
         [TestMethod]
         public void TestROC()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            decimal ROC = Analyzer.RateOfChange(stk, 9);
+            decimal ROC = Analyzer.RateOfChange(petr, 9);
         }
 
         [TestMethod]
         public void TestAnalyzeStock()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.AnalyzeStock(stk);
+            Analyzer.AnalyzeStock(petr);
         }
 
         [TestMethod]
         public void TestFillSimpleMovingAvg()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.FillSimpleMovingAvg(ref stk);
+            Analyzer.FillSimpleMovingAvg(ref petr);
         }
 
         [TestMethod]
         public void TestFillExponentialMovingAvg()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.FillExponentialMovingAvg(ref stk, 9);
+            Analyzer.FillExponentialMovingAvg(ref petr, 9);
 
-            Assert.AreEqual(15.1065m, Math.Round(stk.indicators.EMAShort["20160926"],4));
+            Assert.AreEqual(15.1065m, Math.Round(petr.indicators.EMAShort["20160926"],4));
         }
 
         [TestMethod]
         public void TestFillAccumulationDistribution()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.FillAccumulationDistribution(ref stk, -293444196.4039m);
+            Analyzer.FillAccumulationDistribution(ref petr, -293444196.4039m);
         }
 
         [TestMethod]
         public void TestFillRSI()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.FillRelativeStrenghtIndex(stk, 14);
+            Analyzer.FillRelativeStrenghtIndex(petr, 14);
 
-            Assert.AreEqual(47.0335m, Math.Round(stk.indicators.RSI["20160926"], 4));
+            Assert.AreEqual(47.0335m, Math.Round(petr.indicators.RSI["20160926"], 4));
         }
 
         [TestMethod]
         public void TestFillAroonOscillator()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock stk = allStocks["PETR3"];
+            //Stock stk = allStocks["PETR3"];
 
-            Analyzer.FillAroonOscillator(stk, 14);
+            Analyzer.FillAroonOscillator(petr, 14);
 
-            Assert.AreEqual(14.2857m - 100m, Math.Round(stk.indicators.AroonOsc["20160926"], 4));
+            Assert.AreEqual(14.2857m - 100m, Math.Round(petr.indicators.AroonOsc["20160926"], 4));
         }
     }
 }
