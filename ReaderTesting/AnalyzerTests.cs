@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StockPrice;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Globalization;
 
 namespace ReaderTesting
 {
@@ -16,6 +18,8 @@ namespace ReaderTesting
         [TestInitialize]
         public void Initialize()
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("fr-FR");
+
             allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
             allStocks = Reader.GetAllStockData(allLines);
             petr = allStocks["PETR3"];
