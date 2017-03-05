@@ -12,6 +12,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestSerialize()
         {
+
+            //CONTINUE HERE
+            string s = Properties.Resources.COTAHIST_A2016;
             List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
