@@ -12,7 +12,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestSerialize()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             StockState sc = new StockState(allStocks);

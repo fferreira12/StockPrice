@@ -15,7 +15,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetAllLinesFromPath()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Assert.IsNotNull(allLines);
         }
 
@@ -23,7 +23,7 @@ namespace ReaderTesting
         public void TestGetReadableStream()
         {
 
-            StreamReader sr = Reader.GetReadableStream("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            StreamReader sr = Reader.GetReadableStream("COTAHIST_A2016.TXT");
 
         }
 
@@ -31,7 +31,7 @@ namespace ReaderTesting
         public void TestReadLines()
         {
 
-            StreamReader sr = Reader.GetReadableStream("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            StreamReader sr = Reader.GetReadableStream("COTAHIST_A2016.TXT");
 
             List<string> strings = null;
 
@@ -94,7 +94,7 @@ namespace ReaderTesting
         public void TestGetMarketDataFromPaper()
         {
 
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -103,7 +103,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetAllStockData()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             Stock stk = allStocks["PETR3"];
@@ -128,7 +128,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestRemoveStocksWithoutMarketData()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             allStocks["PETR3"].MarketHistory = new MarketHistory(new Dictionary<string, MarketData>());

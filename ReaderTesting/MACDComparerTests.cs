@@ -12,7 +12,7 @@ namespace ReaderTesting
         public void TestGetDaysSinceLastReversal()
         {
 
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             Stock stk = allStocks["PETR3"];
@@ -23,7 +23,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetMACDOpenness()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             Stock stk = allStocks["PETR3"];
@@ -34,7 +34,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetRankOfMACDOpenness()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             List<Stock> tradedEveryday = StockComparer.RemoveStocksNotTradedEveryday(allStocks);

@@ -13,7 +13,7 @@ namespace ReaderTesting
         public void TestRankOfBestStocks() //static
         {
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);
 
@@ -25,7 +25,7 @@ namespace ReaderTesting
         public void TestRankObjectLevel()
         {
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);
 

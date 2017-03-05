@@ -74,7 +74,7 @@ namespace ReaderTesting
         public void TestEMA2()
         {
 
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -87,7 +87,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestAccDist()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -100,7 +100,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestRSI()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
             Dictionary<string, decimal> allRSI = new Dictionary<string, decimal>();
@@ -138,7 +138,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestAroonOsc()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -149,7 +149,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestMACD()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -159,7 +159,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestROC()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -169,7 +169,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestAnalyzeStock()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -179,7 +179,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillSimpleMovingAvg()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -189,7 +189,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillExponentialMovingAvg()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -201,7 +201,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAccumulationDistribution()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -211,7 +211,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillRSI()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 
@@ -223,7 +223,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAroonOscillator()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk = allStocks["PETR3"];
 

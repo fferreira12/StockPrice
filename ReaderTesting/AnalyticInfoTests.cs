@@ -12,7 +12,7 @@ namespace ReaderTesting
         public void TestQuantityOfIndicators()
         {
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock petr = allStocks["PETR3"];
 
@@ -27,7 +27,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestRecalculate()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock petr = allStocks["PETR3"];
 
@@ -41,7 +41,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestPunctuate()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock petr = allStocks["VALE3"];
 
