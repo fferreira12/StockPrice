@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StockPrice
@@ -33,6 +34,16 @@ namespace StockPrice
         public static List<string> GetAllLinesFromPath(string fileFullPath)
         {
             return ReadLines(GetReadableStream(fileFullPath));
+        }
+
+        public static List<string> GettAllLinesFromText(string text)
+        {
+            List<string> list = new List<string>(Regex.Split(text, Environment.NewLine));
+            list.RemoveAt(0);
+            list.RemoveAt(list.Count - 1);
+            list.RemoveAt(list.Count - 1);
+
+            return list;
         }
 
         public static StreamReader GetReadableStream (string fileFullPath)
@@ -202,6 +213,11 @@ namespace StockPrice
         //does not add the stock object
         public static MarketData GetMarketDataFromLine(string line)
         {
+            if(line.Substring(0,11) == "99COTAHIST.")
+            {
+                return null;
+            }
+
             string date = GetStringInfo(line, MarketStringInfo.DATE);
             MarketData mData = new MarketData();
             

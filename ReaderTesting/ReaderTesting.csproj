@@ -71,6 +71,7 @@
     <Compile Include="EmailNotifierTests.cs" />
     <Compile Include="HistoryFileSelectorTests.cs" />
     <Compile Include="MACDComparerTests.cs" />
+    <Compile Include="Utilities\ReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StockPriceReader\StockPrice.csproj">
