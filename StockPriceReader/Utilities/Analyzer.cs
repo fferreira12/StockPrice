@@ -23,47 +23,56 @@ namespace StockPrice
         //deprecated: use FillSimpleMovingAvg to add Analytic info to a stock
         public static decimal SimpleMovingAvg(Stock stk, int period, string referenceDate = "")
         {
-            //check to see if the calculation is possible
-            //if not, return zero
-            if(stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period)
-            {
+            if (!IsCalculationPossible(stk, period))
                 return 0m;
-            }
 
             //get all strings that represent dates (keys)
             List<string> dateKeys = stk.MarketDatas.Keys.ToList();
-            
+
             //recent first (descending)
-            List<string> orderedKeys;
+            List<string> orderedKeys = GetDescendingOrderedKeys(dateKeys, referenceDate);
 
-            if (!referenceDate.Equals(""))
-            {
-                orderedKeys =
-                        (from key in dateKeys
-                         where key.CompareTo(referenceDate) <= 0 //get only items untill the specified date
-                         orderby key descending
-                         select key).ToList(); 
-            }
-            else
-            {
-                orderedKeys =
-                        (from key in dateKeys
-                         orderby key descending
-                         select key).ToList();
-            }
+            decimal sum = GetSumOfLastClosePrices(stk, period, orderedKeys);
 
+            decimal avg = sum / period;
+
+            return avg;
+        }
+
+        private static decimal GetSumOfLastClosePrices(Stock stk, int period, List<string> orderedKeys)
+        {
             decimal sum = 0m;
 
-            for(int i = 0; i < period; i++)
+            for (int i = 0; i < period; i++)
             {
                 sum += stk.MarketDatas[orderedKeys[i]].closePrice;
             }
 
-            decimal avg = sum / period;
+            return sum;
+        }
 
-            //stk.indicators.
+        public static bool IsCalculationPossible(Stock stk, int period)
+        {
+            return !(stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period);
+        }
 
-            return avg;
+        public static List<string> GetDescendingOrderedKeys(List<string> allList, string referenceDate = "")
+        {
+            if (!referenceDate.Equals(""))
+            {
+                return 
+                        (from key in allList
+                         where key.CompareTo(referenceDate) <= 0 //get only items untill the specified date
+                         orderby key descending
+                         select key).ToList();
+            }
+            else
+            {
+                return 
+                        (from key in allList
+                         orderby key descending
+                         select key).ToList();
+            }
         }
 
         public static bool FillSimpleMovingAvg(ref Stock stk, int periodShort = 0, int periodLong = 0)
