@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace ReaderTesting
 {
-    [TestClass]
+    [TestClass, Ignore]
     public class ComparerTests
     {
 
