@@ -14,25 +14,19 @@ namespace StockPrice
 
          */
 
-    public class Indicator
+    public interface IIndicator
     {
+        //#region properties
 
-        #region fields
+        //string Name { get; set; }
 
-        #endregion
+        //#endregion
 
-        #region properties
+        #region methods
 
-        public string Name { get; set; }
-        #endregion
-
-        #region constructors
-
-        public Indicator(string indicatorName, decimal value, DateTime date, Stock stock)
-        {
-            Name = indicatorName;
-        }
+        Dictionary<string, decimal> CalculateIndicator(MarketHistory mHistory);
 
         #endregion
+
     }
 }

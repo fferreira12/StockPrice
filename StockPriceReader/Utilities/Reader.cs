@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StockPrice
@@ -33,6 +36,16 @@ namespace StockPrice
         public static List<string> GetAllLinesFromPath(string fileFullPath)
         {
             return ReadLines(GetReadableStream(fileFullPath));
+        }
+
+        public static List<string> GettAllLinesFromText(string text)
+        {
+            List<string> list = new List<string>(Regex.Split(text, Environment.NewLine));
+            list.RemoveAt(0);
+            list.RemoveAt(list.Count - 1);
+            list.RemoveAt(list.Count - 1);
+
+            return list;
         }
 
         public static StreamReader GetReadableStream (string fileFullPath)
@@ -156,13 +169,13 @@ namespace StockPrice
                 case MarketNumericInfo.NEGOTIATIONSNUMBER:
                 case MarketNumericInfo.PAPERSNUMBER:
                 case MarketNumericInfo.MARKETTYPE:
-                    value = decimal.Parse(str);
+                    value = decimal.Parse(str, new CultureInfo("pt-BR"));
                     break;
                 case MarketNumericInfo.VOLUME:
-                    value = decimal.Parse(str.Substring(0,str.Length - 2) + "," + str.Substring(str.Length - 2));
+                    value = decimal.Parse(str.Substring(0,str.Length - 2) + "," + str.Substring(str.Length - 2), new CultureInfo("pt-BR"));
                     break;
                 default:
-                    value = decimal.Parse(str.Substring(0, str.Length - 2) + "," + str.Substring(str.Length - 2));
+                    value = decimal.Parse(str.Substring(0, str.Length - 2) + "," + str.Substring(str.Length - 2), new CultureInfo("pt-BR"));
                     break;
 
             }
@@ -202,11 +215,19 @@ namespace StockPrice
         //does not add the stock object
         public static MarketData GetMarketDataFromLine(string line)
         {
+            if(line.Substring(0,11) == "99COTAHIST.")
+            {
+                return null;
+            }
+
             string date = GetStringInfo(line, MarketStringInfo.DATE);
             MarketData mData = new MarketData();
-            
+
             //does not add the stock
             //mData.stock = stock; 
+
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("pt-BR");
+
             mData.Date = ConvertStringToDateTime(date);
             mData.avgPrice = GetNumericInfo(line, MarketNumericInfo.AVGPRICE);
             mData.closePrice = GetNumericInfo(line, MarketNumericInfo.CLOSEPRICE);

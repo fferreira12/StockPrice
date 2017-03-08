@@ -8,6 +8,19 @@ namespace ReaderTesting
     [TestClass]
     public class MarketHistoryTests
     {
+
+        List<string> allLines;
+        Dictionary<string, Stock> allStocks;
+        Stock petr;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
+            allStocks = Reader.GetAllStockData(allLines);
+            petr = allStocks["PETR3"];
+        }
+
         #region constructor tests
         [TestMethod]
         public void TestCreateMarketHistoryWithVoidConstructor()
@@ -20,7 +33,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestCreateMarketHistoryWithDictionary()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -33,7 +46,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestStringIndexer()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -45,7 +58,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestIntIndexer()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -59,7 +72,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestDatesProperty()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -73,7 +86,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetLastNMarKetDatas()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -85,7 +98,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetLastNClosingPrices()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -97,7 +110,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestGetLastNumericData()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 
@@ -122,7 +135,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestForEach()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
 
             Dictionary<string, MarketData> mData = Reader.GetMarketDataFromPaper("PETR3", allLines);
 

@@ -8,13 +8,26 @@ namespace ReaderTesting
     [TestClass]
     public class MarketHistoryAnalyzerTests
     {
+
+        List<string> allLines;
+        Dictionary<string, Stock> allStocks;
+        Stock petr;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
+            allStocks = Reader.GetAllStockData(allLines);
+            petr = allStocks["PETR3"];
+        }
+
         [TestMethod]
         public void TestFillSimpleMovingAvg()
         {
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillSimpleMovingAvg(ref petr);
 
@@ -23,9 +36,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillExponentialMovingAvg()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillExponentialMovingAvg(ref petr);
         }
@@ -33,9 +46,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAccDist()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillAccDist(ref petr, -306154896.4039m);
         }
@@ -43,9 +56,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillRSI()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillRSI(ref petr, 14);
         }
@@ -53,9 +66,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAroon()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillAroon(ref petr, 14);
         }
@@ -63,9 +76,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillMACD()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillMACD(ref petr, 12, 26, 9);
         }
@@ -73,9 +86,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillROC()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillROC(ref petr, 9);
         }
@@ -83,9 +96,9 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAllWithDefaults()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
-            Stock petr = allStocks["PETR3"];
+            //Stock petr = allStocks["PETR3"];
 
             MarketHistoryAnalyzer.FillAllWithDefaults(petr);
         }
@@ -93,7 +106,7 @@ namespace ReaderTesting
         [TestMethod]
         public void TestFillAllWithDefaultsWithList()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             Stock stk1 = allStocks["PETR3"];
             Stock stk2 = allStocks["ABEV3"];
@@ -115,7 +128,7 @@ namespace ReaderTesting
         public void TestFillAllWithDefaultsWithDictionary()
         {
 
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             MarketHistoryAnalyzer.FillAllWithDefaults(allStocks);
 

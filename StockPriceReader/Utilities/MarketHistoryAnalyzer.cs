@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockPrice.Indicators;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,10 @@ namespace StockPrice
 
         public static bool FillSimpleMovingAvg(ref Stock stk, int periodShort = 0, int periodLong = 0)
         {
+
+
             //get defaults if zero
-            if(periodShort == 0)
+            if (periodShort == 0)
             {
                 periodShort = stk.indicators.SMAPeriodShort;
             }
@@ -31,77 +34,83 @@ namespace StockPrice
                 periodLong = stk.indicators.SMAPeriodLong;
             }
 
-            int valuesAdded = 0;
+            //int valuesAdded = 0;
 
-            
+            IIndicator SMAShort = new SimpleMovingAverage(periodShort);
+            IIndicator SMALong = new SimpleMovingAverage(periodLong);
 
-            Dictionary<string, decimal> tempLong = new Dictionary<string, decimal>();
-            Dictionary<string, decimal> tempShort = new Dictionary<string, decimal>();
+            stk.indicators.SMAShort = SMAShort.CalculateIndicator(stk.MarketHistory);
+            stk.indicators.SMALong = SMALong.CalculateIndicator(stk.MarketHistory);
 
-            foreach (MarketData m in stk.MarketHistory)
-            {
-                var lastClosesShort = stk.MarketHistory.GetLastNClosingPrices(periodShort, m.dateStr);
-                var lastMClosesLong = stk.MarketHistory.GetLastNClosingPrices(periodLong, m.dateStr);
+            return true;
 
-                decimal avgShort = lastClosesShort.Average();
-                decimal avgLong = lastMClosesLong.Average();
+            //Dictionary<string, decimal> tempLong = new Dictionary<string, decimal>();
+            //Dictionary<string, decimal> tempShort = new Dictionary<string, decimal>();
 
-                //short eval
-                if (lastClosesShort.Count() == periodShort)
-                {
-                    try
-                    {
-                        stk.indicators.SMAShort.Add(m.dateStr, avgShort);
-                    }
-                    catch (Exception)
-                    {
-                        stk.indicators.SMAShort[m.dateStr] = avgShort;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        stk.indicators.SMAShort.Add(m.dateStr, 0m);
-                    }
-                    catch
-                    {
-                        stk.indicators.SMAShort[m.dateStr] = 0m;
-                    }
-                }
+            //foreach (MarketData m in stk.MarketHistory)
+            //{
+            //    var lastClosesShort = stk.MarketHistory.GetLastNClosingPrices(periodShort, m.dateStr);
+            //    var lastMClosesLong = stk.MarketHistory.GetLastNClosingPrices(periodLong, m.dateStr);
 
-                //long eval
-                if (lastMClosesLong.Count() == periodLong)
-                {
-                    try
-                    {
-                        stk.indicators.SMALong.Add(m.dateStr, avgLong);
-                    }
-                    catch (Exception)
-                    {
-                        stk.indicators.SMALong[m.dateStr] = avgLong;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        stk.indicators.SMALong.Add(m.dateStr, 0m);
-                    }
-                    catch
-                    {
-                        stk.indicators.SMALong[m.dateStr] = 0m;
+            //    decimal avgShort = lastClosesShort.Average();
+            //    decimal avgLong = lastMClosesLong.Average();
 
-                    }
-                }
+            //    //short eval
+            //    if (lastClosesShort.Count() == periodShort)
+            //    {
+            //        try
+            //        {
+            //            stk.indicators.SMAShort.Add(m.dateStr, avgShort);
+            //        }
+            //        catch (Exception)
+            //        {
+            //            stk.indicators.SMAShort[m.dateStr] = avgShort;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        try
+            //        {
+            //            stk.indicators.SMAShort.Add(m.dateStr, 0m);
+            //        }
+            //        catch
+            //        {
+            //            stk.indicators.SMAShort[m.dateStr] = 0m;
+            //        }
+            //    }
 
-                tempLong.Add(m.dateStr, avgLong);
-                tempShort.Add(m.dateStr, avgShort);
+            //    //long eval
+            //    if (lastMClosesLong.Count() == periodLong)
+            //    {
+            //        try
+            //        {
+            //            stk.indicators.SMALong.Add(m.dateStr, avgLong);
+            //        }
+            //        catch (Exception)
+            //        {
+            //            stk.indicators.SMALong[m.dateStr] = avgLong;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        try
+            //        {
+            //            stk.indicators.SMALong.Add(m.dateStr, 0m);
+            //        }
+            //        catch
+            //        {
+            //            stk.indicators.SMALong[m.dateStr] = 0m;
 
-                valuesAdded += 2;
-            }
+            //        }
+            //    }
 
-            return valuesAdded > 0;
+            //    tempLong.Add(m.dateStr, avgLong);
+            //    tempShort.Add(m.dateStr, avgShort);
+
+            //    valuesAdded += 2;
+            //}
+
+            //return valuesAdded > 0;
         }
 
         public static bool FillExponentialMovingAvg(ref Stock stk, int periodShort = 0, int periodLong = 0)

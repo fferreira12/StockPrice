@@ -9,12 +9,25 @@ namespace ReaderTesting
     [TestClass]
     public class MixedTests
     {
+
+        List<string> allLines;
+        Dictionary<string, Stock> allStocks;
+        Stock petr;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
+            allStocks = Reader.GetAllStockData(allLines);
+            petr = allStocks["PETR3"];
+        }
+
         [TestMethod]
         public void GetStockWithHigherRSI()
         {
             
             //get all stocks
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             decimal maxVal = 0m;
             Stock stk = null;
@@ -35,7 +48,7 @@ namespace ReaderTesting
         [TestMethod]
         public void GetHistoryOfAroon()
         {
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
             Stock stk = allStocks["ABEV3"];
 
             List<string> mDates =
@@ -56,7 +69,7 @@ namespace ReaderTesting
         public void TestGetStockWithHigherROC()
         {
             //get all stocks
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData("COTAHIST_A2016.TXT");
 
             decimal maxVal = 0m;
             Stock stk = null;
