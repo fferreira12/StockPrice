@@ -9,16 +9,18 @@ namespace StockPrice.Indicators
     class SimpleMovingAverage : IIndicator
     {
 
-
+        #region static fields
+        static readonly int DEFAULT_PERIOD = 15;
+        #endregion
 
         #region fields
-        int period = 15;
+        int period;
         #endregion
 
         #region constructors
         public SimpleMovingAverage(int period)
         {
-            this.period = period > 0 ? period : this.period;
+            this.period = period > 0 ? period : DEFAULT_PERIOD;
         }
         #endregion
 
