@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -78,17 +79,18 @@
   <ItemGroup>
     <Compile Include="Elements\AnalyticInfo.cs" />
     <Compile Include="Elements\Indicator.cs" />
-    <Compile Include="Elements\Indicators.cs" />
     <Compile Include="Elements\Interfaces.cs" />
     <Compile Include="Elements\MarketData.cs" />
     <Compile Include="Elements\MarketHistory.cs" />
     <Compile Include="Elements\StockState.cs" />
+    <Compile Include="Indicators\SimpleMovingAverage.cs" />
     <Compile Include="Utilities\Analyzer.cs" />
     <Compile Include="Utilities\Decaptcher.cs" />
     <Compile Include="Utilities\Delegates.cs" />
     <Compile Include="Utilities\EmailNotifier.cs" />
     <Compile Include="Utilities\Gmail.cs" />
     <Compile Include="Utilities\HistoryFileSelector.cs" />
+    <Compile Include="Utilities\MACDComparer.cs" />
     <Compile Include="Utilities\StockComparer.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\MarketHistoryAnalyzer.cs" />

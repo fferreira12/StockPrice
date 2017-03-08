@@ -16,6 +16,12 @@ namespace StockPrice
     public class AnalyticInfo
     {
 
+        #region newFields
+
+        List<IIndicator> indicators = new List<IIndicator>();
+
+        #endregion
+
         #region fields
         //TKey: string of date
         public Dictionary<string, decimal> SMAShort, SMALong, EMAShort, EMALong;

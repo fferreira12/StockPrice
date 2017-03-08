@@ -9,11 +9,27 @@ namespace ReaderTesting
     [TestClass]
     public class StockStateTests
     {
+
+        List<string> allLines;
+        Dictionary<string, Stock> allStocks;
+        Stock petr;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            allLines = Reader.GettAllLinesFromText(ReaderTesting.Properties.Resources.COTAHIST_A2016);
+            allStocks = Reader.GetAllStockData(allLines);
+            petr = allStocks["PETR3"];
+        }
+
         [TestMethod]
         public void TestSerialize()
         {
-            List<string> allLines = Reader.GetAllLinesFromPath("C:\\Users\\Cliente\\Downloads\\COTAHIST_A2016.TXT");
-            Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
+
+            ////CONTINUE HERE
+            //string s = Properties.Resources.COTAHIST_A2016;
+            //List<string> allLines = Reader.GetAllLinesFromPath("COTAHIST_A2016.TXT");
+            //Dictionary<string, Stock> allStocks = Reader.GetAllStockData(allLines);
 
             StockState sc = new StockState(allStocks);
 
@@ -27,7 +43,7 @@ namespace ReaderTesting
         {
             StockState sc = new StockState();
 
-            Dictionary<string, Stock> allStocks = sc.Deserialize("stocks.bin");
+            //Dictionary<string, Stock> allStocks = sc.Deserialize("stocks.bin");
 
             Assert.AreNotEqual(null, allStocks);
         }
