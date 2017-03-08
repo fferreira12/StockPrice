@@ -26,17 +26,43 @@ namespace StockPrice
             if (!IsCalculationPossible(stk, period))
                 return 0m;
 
-            //get all strings that represent dates (keys)
-            List<string> dateKeys = stk.MarketDatas.Keys.ToList();
-
-            //recent first (descending)
-            List<string> orderedKeys = GetDescendingOrderedKeys(dateKeys, referenceDate);
+            List<string> orderedKeys = GetDescendingOrderDates(stk, referenceDate);
 
             decimal sum = GetSumOfLastClosePrices(stk, period, orderedKeys);
 
             decimal avg = sum / period;
 
             return avg;
+        }
+
+        private static List<string> GetDescendingOrderDates(Stock stk, string referenceDate = "")
+        {
+
+            //get all strings that represent dates (keys)
+            List<string> dateKeys = stk.MarketDatas.Keys.ToList();
+
+            //recent first (descending)
+            List<string> orderedKeys = GetDescendingOrderDates(dateKeys, referenceDate);
+
+            return orderedKeys;
+        }
+        public static List<string> GetDescendingOrderDates(List<string> allList, string referenceDate = "")
+        {
+            if (!referenceDate.Equals(""))
+            {
+                return 
+                        (from key in allList
+                         where key.CompareTo(referenceDate) <= 0 //get only items untill the specified date
+                         orderby key descending
+                         select key).ToList();
+            }
+            else
+            {
+                return 
+                        (from key in allList
+                         orderby key descending
+                         select key).ToList();
+            }
         }
 
         private static decimal GetSumOfLastClosePrices(Stock stk, int period, List<string> orderedKeys)
@@ -56,24 +82,6 @@ namespace StockPrice
             return !(stk == null || stk.MarketDatas == null || stk.MarketDatas.Count == 0 || stk.MarketDatas.Count < period);
         }
 
-        public static List<string> GetDescendingOrderedKeys(List<string> allList, string referenceDate = "")
-        {
-            if (!referenceDate.Equals(""))
-            {
-                return 
-                        (from key in allList
-                         where key.CompareTo(referenceDate) <= 0 //get only items untill the specified date
-                         orderby key descending
-                         select key).ToList();
-            }
-            else
-            {
-                return 
-                        (from key in allList
-                         orderby key descending
-                         select key).ToList();
-            }
-        }
 
         public static bool FillSimpleMovingAvg(ref Stock stk, int periodShort = 0, int periodLong = 0)
         {
